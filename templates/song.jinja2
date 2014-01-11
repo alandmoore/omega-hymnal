@@ -1,0 +1,23 @@
+{% extends "base.jinja2" %}
+{% block additional_headers %}
+<script src='{{url_for("static", filename="js/songpage.js")}}'></script>
+<script>document.song_id = {{song.get("id")}};</script>
+{% endblock %}
+{% block body %}
+{% include "song_navigation.jinja2" %}
+<div id="content">
+
+{% for page in song.get("pages"): %}
+<div 
+   id='page{{page.get("page_number")}}' 
+   class = 'songpage'
+   data-songtitle = "{{song.get("name")}}"
+>
+{{page.get("lyrics_prepped")}}
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

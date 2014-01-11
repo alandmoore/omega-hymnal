@@ -1,0 +1,245 @@
+BODY
+{ 
+  background-color: #333;
+  color: white;
+  font-size: 12pt;
+  font-family: Tahoma, Arial, Sans;
+  padding: 0px;
+  margin: 0px;
+}
+
+A 
+{ 
+  color: #EEF;
+  text-decoration: none;
+  
+ }
+
+A:hover
+{ 
+  font-style: italic;
+ }
+
+input[type=text]
+{ 
+  min-width: 30em;
+ }
+DIV.songpage
+{ 
+  font-size: 5em;
+  text-shadow: 0px 2px 2px #888;
+  padding: .5em 30px 20px 30px;
+  width: 90%;
+  height: 100%;
+  overflow: auto;
+  margin-top: 1em;
+  }
+
+NAV 
+{ 
+  background-color: slategray;
+  color: #111;
+  border-bottom: solid 2px silver;
+  box-shadow: inset 0px -10px 10px #AAC, 2px 2px 4px black;
+  height: 2em;
+  margin-top: 0px;
+  font-size: 1.5em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index:100;
+  width: 100%;
+ }
+
+NAV UL
+{ 
+  list-style: none;
+  margin-top: 0px;
+  padding: 10px;
+ }
+
+NAV UL LI
+{ 
+  float: left;
+ }
+
+NAV A
+{ 
+  text-shadow: 0px 0px 5px black;
+ }
+
+NAV SPAN
+{ 
+  color: #EEE;
+  text-shadow: 0px 0px 5px black;
+  
+ }
+NAV UL LI UL 
+{ 
+  margin: 0px;
+  padding: 0px;
+ }
+
+NAV UL LI UL LI
+{ 
+  margin-right: 10px;
+  padding: 0px 10px 0px 10px;
+ }
+
+
+#content
+{ 
+  padding: 20px;
+  text-align: justify;
+}
+
+/************/
+/* Songlist */
+/************/
+
+#songlist
+{
+  list-style: none;
+  overflow: auto;
+  width: 99%;
+  position: relative;
+  overflow: auto;
+  height: auto;
+  margin-top: 8em;
+}
+
+#songlist LI
+{ 
+  font-size: 1.2em;
+  border-radius: 5px;
+  background-color: silver;
+  color: #111;
+  text-align: center;
+  vertical-align: middle;
+  margin: 4px;
+  padding: 0px;
+  letter-spacing: .1em;
+  float: left;
+  width: 20em;
+  height: 3em;
+  overflow: hidden;
+}
+
+#songlist LI .song_title
+{ 
+  display:block;
+  color: #111;
+  text-shadow: 0px 0px 3px gray;
+  height: 1.5em;
+  padding: 4px;
+}
+
+#songlist LI:hover
+{ 
+  background-color: slategray;
+  cursor: pointer;
+  font-style: italic;
+  }
+
+#edit_form
+{ 
+  border-radius: 5px;
+  color: #111;
+  background-color: silver;
+  padding: 20px;
+  overflow: auto;
+ }
+
+#edit_form UL
+{ 
+  list-style: none;
+ }
+
+#edit_form UL LI
+{ 
+  text-align: left;
+  overflow: auto;
+  width: 90%;
+  float:none;
+  height: auto;
+ }
+
+#edit_form UL LI LABEL
+{ 
+  display: block;
+  float: left;
+  width: 10em;
+ }
+
+#edit_form TEXTAREA.page_textarea
+{ 
+  display: block;
+  width: 80%;
+  clear: both;
+  height: 7em;
+  margin-bottom: .5em;
+ }
+
+#edit_form INPUT[type=text]
+{
+   width: 24em;
+}
+
+#delete{ 
+         color: red;
+         border: solid 2px red;
+ }
+
+#filter_controls
+{ 
+  position: fixed;
+  top: 3em;
+  background-color: #333;
+  opacity: .9;
+  z-index: 50;
+  width: 100%;
+ }
+
+SPAN.songline
+{ 
+  position: relative;
+ }
+
+SPAN.chord
+{ 
+  color: #DDF;
+  position: absolute;
+  z-index: 99;
+  font-size: .5em;
+  width: 0;
+  overflow: show;
+ }
+
+.keywords
+{ 
+  font-size: .6em;
+  color: #555;
+  font-style: italic;
+  z-index: 800;
+ }
+
+SPAN.chord_icon
+{ 
+  background-color: lightblue;
+  border-radius: 50%;
+  margin: .5em;
+}
+
+
+/**********/
+/* FOOTER */
+/**********/
+
+#footer {
+   position: fixed;
+   bottom: 0px;
+   text-align: center;
+   opacity: .3;
+   width: 100%;
+   background-color: #888;
+}

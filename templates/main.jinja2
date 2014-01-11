@@ -1,0 +1,38 @@
+{% extends "base.jinja2" %}
+
+{% block body %}
+{% include "navigation.jinja2" %}
+<div id="content">
+
+<div id="filter_controls">
+<label for='search'>Search: </label><input id='search' />
+<select id='category_select'>
+<option value=''>(All)</option>
+{% for category in categories: %}
+<option value="{{category}}">{{category}}</option>
+{% endfor %}
+</select>
+<button id='randomize_list'>Randomize</button>
+</div>
+
+<ul id="songlist">
+
+  {% for song in songs: %}
+<li 
+   class='songlink'
+   title = "{{song.get("first_page")}}"
+   data-song_id={{song.get("id")}} 
+   data-category="{{song.get("category")}}"
+   data-href="{{url_for("song", id=song.get("id"))}}"
+> 
+  <span class="song_title">{{song.get("name")}}</span>
+  <span class="keywords">{{song.get("keywords")}}</span>
+  {% if song.get("has_chords") == 1: %}
+    <span class=chord_icon>&#x266B;</span>
+{% endif %}
+</li>
+{% endfor %}
+
+</ul>
+</div>
+{% endblock %}

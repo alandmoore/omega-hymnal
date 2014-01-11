@@ -1,0 +1,19 @@
+<nav>
+<ul>
+{% for description, url, id in [
+  ("Home", url_for("index"), "link_home"),
+  ("Settings", url_for("settings"), "link_settings"),
+  ("New song", "#", "new_song")
+  ]%}
+<li id="{{id}}">
+{% if url: %}
+<a href="{{url}}">
+{{description}}
+</a>
+{% else: %}
+{{description}}
+{% endif %}
+</li>
+{% endfor %}
+</ul>
+</nav>

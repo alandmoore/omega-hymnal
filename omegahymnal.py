@@ -17,7 +17,7 @@ and your favorite standards-compliant web browser.
 """
 
 
-from flask import Flask, g, render_template, request, url_for, redirect, session
+from flask import Flask, g, render_template, request, url_for, redirect, session, abort
 from includes.database import Database
 
 app = Flask(__name__)
@@ -29,9 +29,34 @@ def before_request():
 
 @app.route("/")
 def index():
-    songs = g.db.query("SELECT * FROM song_list_v ORDER BY name")
-    songs = [dict(x) for x in songs]
-    return songs.__str__()
+    songs = g.db.get_songlist()
+    categories = g.db.get_categories()
+    return render_template("main.jinja2", songs=songs, categories=categories)
+
+@app.route("/song/<id>")
+def song(id):
+    song = g.db.get_song(int(id))
+    return render_template("song.jinja2", song=song)
+
+@app.route("/edit_song/<id>")
+def edit_song(id):
+    song = g.db.get_song(int(id))
+    return render_template("edit_form.jinja2", song=song)
+
+@app.route("/settings")
+def settings():
+    return render_template("base.jinja2")
+
+@app.route("/post/<callback>", methods=["POST"])
+def post(callback):
+    callbacks = {
+        "song" : g.db.save_song
+                 }
+    if callback not in callbacks.keys():
+        abort(403)
+    else:
+        result = callbacks.get(callback)(request.form)
+        return result
 
 if __name__ == "__main__":
     app.debug = True
