@@ -61,4 +61,7 @@ def post(callback):
 if __name__ == "__main__":
     app.debug = True
     app.config.from_pyfile("omegahymnal.conf", silent=True)
-    app.run()
+    app.run(
+        host=app.config.get("HOST", 'localhost'),
+        port=app.config.get("PORT", 5000)
+            )
