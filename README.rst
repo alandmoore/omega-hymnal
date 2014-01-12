@@ -50,7 +50,12 @@ By default the left and right arrow keys move you between pages of the song.  Th
 Chords
 ------
 
-Chords can be inserted into your music and display above the words like on a guitar sheet.  To add chords, insert the chord symbols between curly braces (that's "{" and "}").  The following substitutions are made when the chords are displayed:
+Chords can be inserted into your music and display above the words like on a guitar sheet.  To add chords, insert the chord symbols between curly braces (that's "{" and "}") wherever they fall in the lyrics.  For example::
+
+  {D}I know that {D7/F#}my re{G}deemer {A7}lives
+
+Omega Hymnal will display each chord above the word following it.  
+The following substitutions are made when the chords are displayed:
 
 - The pound sign "#" becomes a sharp symbol
 - The lower-case 'b' becomes a flat symbol
