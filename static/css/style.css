@@ -141,7 +141,7 @@ NAV UL LI UL LI
   font-style: italic;
   }
 
-#edit_form
+FORM
 { 
   border-radius: 5px;
   color: #111;
@@ -150,12 +150,12 @@ NAV UL LI UL LI
   overflow: auto;
  }
 
-#edit_form UL
+FORM UL
 { 
   list-style: none;
  }
 
-#edit_form UL LI
+FORM UL LI
 { 
   text-align: left;
   overflow: auto;
@@ -164,14 +164,14 @@ NAV UL LI UL LI
   height: auto;
  }
 
-#edit_form UL LI LABEL
+FORM UL LI LABEL
 { 
   display: block;
   float: left;
   width: 10em;
  }
 
-#edit_form TEXTAREA.page_textarea
+FORM TEXTAREA.page_textarea
 { 
   display: block;
   width: 80%;
@@ -180,7 +180,7 @@ NAV UL LI UL LI
   margin-bottom: .5em;
  }
 
-#edit_form INPUT[type=text]
+FORM INPUT[type=text]
 {
    width: 24em;
 }

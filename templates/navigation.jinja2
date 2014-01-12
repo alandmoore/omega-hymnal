@@ -2,8 +2,10 @@
 <ul>
 {% for description, url, id in [
   ("Home", url_for("index"), "link_home"),
-  ("Settings", url_for("settings"), "link_settings"),
-  ("New song", "#", "new_song")
+  ("New song", "#", "new_song"),
+  ("Import", "#", "link_import"),
+  ("Export", "#", "link_export"),
+  ("Settings", url_for("settings"), "link_settings")
   ]%}
 <li id="{{id}}">
 {% if url: %}

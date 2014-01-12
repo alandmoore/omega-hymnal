@@ -70,7 +70,7 @@ $(document).ready(function(){
     
     $(document).on("click", "#edit_song A", function(){
 	$.get("/edit_song/"+document.song_id, function(data){
-	    $("#_dialog_").html(data).dialog(edit_dialog_options);
+	    $("#_dialog_").html(data).dialog(default_dialog_options);
 	    $("#_dialog_ INPUT[name=category]").autocomplete({
 		source:"/json/categories",
 		minLength: 2

@@ -17,8 +17,9 @@ and your favorite standards-compliant web browser.
 """
 
 
-from flask import Flask, g, render_template, request, json,  abort
+from flask import Flask, g, render_template, request, json,  abort, Response
 from includes.database import Database
+import zlib
 
 app = Flask(__name__)
 
@@ -43,6 +44,32 @@ def edit_song(id):
     song = g.db.get_song(int(id))
     return render_template("edit_form.jinja2", song=song)
 
+@app.route("/export", methods=["GET", "POST"])
+def export():
+    if request.method == "GET":
+        categories = g.db.get_categories()
+        return render_template("export_form.jinja2", categories=categories)
+    else: #perform an export
+        export = g.db.export_songs(request.form)
+        #filedata = json.dumps(export).encode("utf-8")
+        filedata = zlib.compress(json.dumps(export).encode("utf-8"))
+        return Response(filedata, mimetype='application/octet-stream',
+                        headers = {"Content-Disposition":"attachment;filename=export.omegahymnal"})
+
+@app.route("/import", methods=["GET", "POST"])
+def import_songs():
+    if request.method == "GET":
+        return render_template("import_form.jinja2")
+    else:
+        import_file = request.files["import_file"].stream.read()
+        songs_imported = 0
+        print(type(import_file))
+        import_data = json.loads(zlib.decompress(import_file).decode("utf-8"))
+        for song in import_data:
+            g.db.save_imported_song(song)
+            songs_imported += 1
+        return "{} songs imported".format(songs_imported)
+        
 @app.route("/settings")
 def settings():
     return render_template("base.jinja2")
@@ -50,7 +77,7 @@ def settings():
 @app.route("/post/<callback>", methods=["POST"])
 def post(callback):
     callbacks = {
-        "song" : g.db.save_song,
+        "song" : g.db.save_posted_song,
         "delete" : g.db.delete_song
                  }
     if callback not in callbacks.keys():
@@ -62,12 +89,14 @@ def post(callback):
 @app.route("/json/<callback>")
 def json_get(callback):
     callbacks = {
-        "categories" : g.db.get_categories
+        "categories" : g.db.get_categories,
+        "names"  : g.db.get_names,
+        "export"  : g.db.export_songs
         }
     if callback not in callbacks.keys():
         abort(403)
     else:
-        result = callbacks.get(callback)(request.form)
+        result = callbacks.get(callback)(**request.args)
         return json.dumps(result)
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ Database model for OMEGA HYMNAL.
 
 import sqlite3
 from .util import prep_lyrics
+from flask import json
 
 class Database:
 
@@ -45,30 +46,77 @@ class Database:
         return songs
 
     def get_categories(self, *args, **kwargs):
-        categories = self.query("SELECT DISTINCT category FROM songs ORDER BY category")
+        term = kwargs.get("term", [''])[0] + '%'
+        categories = self.query("SELECT DISTINCT category FROM songs WHERE category like ? ORDER BY category", (term,))
         categories = [x["category"] for x in categories]
         return categories
-    
+
+    def get_names(self, *args, **kwargs):
+        print(kwargs)
+        term = kwargs.get("term", [''])[0] + "%"
+        names = self.query("SELECT DISTINCT name FROM songs WHERE name like ? ORDER BY name", (term,))
+        names = [x["name"] for x in names]
+        return names
 
     def get_song(self, id, *args, **kwargs):
         song = self.query("""SELECT * FROM songs WHERE id=?""", (id,))
         if not song:
             return {}
         song = song[0]
-        song["pages"] = self.query("""SELECT * FROM pages WHERE song_id=? ORDER BY page_number ASC""", (id,))
-        for i, page in enumerate(song.get("pages")):
-            lyrics = page.get("lyrics")
-            song["pages"][i]["lyrics_prepped"] = prep_lyrics(lyrics)
+        song["pages"] = self.query("""SELECT page_number, lyrics FROM pages WHERE song_id=? ORDER BY page_number ASC""", (id,))
+        if not kwargs.get("no_prep_lyrics"):
+            for i, page in enumerate(song.get("pages")):
+                lyrics = page.get("lyrics")
+                song["pages"][i]["lyrics_prepped"] = prep_lyrics(lyrics)
         return song
 
+    
+    def export_songs(self, formdata, *args, **kwargs):
+        export_type = formdata.get("type")
+        if export_type == "name":
+            qdata = {"name" : formdata.get("name")}
+            query = "SELECT id FROM songs WHERE name like :name"
+        elif export_type == "category":
+            qdata = {"category" :formdata.get("category")}
+            query = "SELECT id FROM songs WHERE category like :category"
+        elif export_type == "keyword":
+            qdata = {"keywords" : "%{}%".format(formdata.get("keywords"))}
+            query = "SELECT id FROM songs WHERE keywords like :keywords"
+        elif export_type == "author":
+            qdata = {"authors" : "%{}%".format(formdata.get("authors"))}
+            query = "SELECT id FROM songs WHERE authors like :authors"
+        else:  #Default to "all"
+            qdata = {}
+            query = "SELECT id FROM songs"
+        idlist = self.query(query, qdata)
+        idlist = [x["id"] for x in idlist]
+
+        export = []
+        for song_id in idlist:
+            export.append(self.get_song(song_id, no_prep_lyrics=True))
+        return export
+            
+    
     ###########
     # Setters #
     ###########
 
-    def save_song(self, formdata):
+    def save_posted_song(self, formdata):
         new_record = formdata.get("id") == 'None'
-        print(new_record)
-        print(dict(formdata))
+        pages = [p for p in formdata.getlist("page") if p]
+        formdata = {key : value for key, value in formdata.items()}
+        formdata["pages"] = pages
+        return self.save_song(formdata, new_record)
+
+    def save_imported_song(self, formdata):
+        new_record = True
+        pages = []
+        for page in sorted(formdata.get("pages"), key= lambda k: k["page_number"]):
+            pages.append(page.get("lyrics"))
+        formdata["pages"] = pages
+        return self.save_song(formdata, new_record)
+
+    def save_song(self, formdata, new_record=True):
         qdata = {
             "name" : formdata.get("name"),
             "authors" : formdata.get("authors"),
@@ -81,10 +129,11 @@ class Database:
         else:
             query = """UPDATE songs SET name=:name, authors=:authors, category=:category, keywords=:keywords WHERE id=:id """
             qdata["id"] = formdata.get("id")
+        print(query, qdata)
         self.query(query, qdata, False)
         song_id = (new_record and self.cu().lastrowid) or int(formdata.get("id"))
 
-        pages = [p for p in formdata.getlist("page") if p]
+        pages = formdata.get("pages")
         for pagenum, page in enumerate(pages):
             qdata = {
                 "song_id" : song_id,

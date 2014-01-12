@@ -36,10 +36,14 @@ $.extend($.expr[':'], {
   }
 });
 
-var edit_dialog_options = {
+var default_dialog_options = {
     width : "90%",
-    modal : true,
-    title : "Edit song"
+    modal : true
+}
+
+function show_popup_form(data){
+    var title = $(data).attr("title")
+    $("#_dialog_").html(data).attr("title", title).dialog(default_dialog_options);
 }
 
 $(document).ready(function(){
@@ -102,7 +106,7 @@ $(document).ready(function(){
     //New song button
     $(document).on("click", "#new_song A", function(){
 	$.get("edit_song/0", function(data){
-	    $("#_dialog_").html(data).dialog(edit_dialog_options);
+	    show_popup_form(data);
 	    $("#_dialog_ INPUT[name=category]").autocomplete({
 		source:"/json/categories",
 		minLength: 2
@@ -130,7 +134,6 @@ $(document).ready(function(){
 	var formdata = $(this).serialize();
 	var new_song = $(this).find("INPUT[name=id]").val() === 'None';
 	$.post("/post/song", formdata, function(song_id){
-	    console.log(song_id);
 	    if (new_song){
 		window.open("/song/"+song_id);
 		$("#_dialog_").dialog("close");
@@ -139,6 +142,24 @@ $(document).ready(function(){
 	    }
 	});
 	return false;
+    });
+
+    //Show the export dialog
+    $(document).on("click", "#link_export", function(){
+	$.get("/export", function(data){
+	    show_popup_form(data);
+	    $("#_dialog_ INPUT[name=name]").autocomplete({
+		source:"/json/names",
+		minLength: 2
+	    });
+	})
+    });
+    
+    //Show the import dialog
+    $(document).on("click", "#link_import", function(){
+	$.get("/import", function(data){
+	    show_popup_form(data);
+	});
     });
 
 });
