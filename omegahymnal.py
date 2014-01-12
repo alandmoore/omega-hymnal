@@ -17,7 +17,7 @@ and your favorite standards-compliant web browser.
 """
 
 
-from flask import Flask, g, render_template, request, url_for, redirect, session, abort
+from flask import Flask, g, render_template, request, json,  abort
 from includes.database import Database
 
 app = Flask(__name__)
@@ -50,13 +50,25 @@ def settings():
 @app.route("/post/<callback>", methods=["POST"])
 def post(callback):
     callbacks = {
-        "song" : g.db.save_song
+        "song" : g.db.save_song,
+        "delete" : g.db.delete_song
                  }
     if callback not in callbacks.keys():
         abort(403)
     else:
         result = callbacks.get(callback)(request.form)
         return result
+
+@app.route("/json/<callback>")
+def json_get(callback):
+    callbacks = {
+        "categories" : g.db.get_categories
+        }
+    if callback not in callbacks.keys():
+        abort(403)
+    else:
+        result = callbacks.get(callback)(request.form)
+        return json.dumps(result)
 
 if __name__ == "__main__":
     app.debug = True

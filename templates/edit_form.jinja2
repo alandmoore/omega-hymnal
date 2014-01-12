@@ -1,11 +1,12 @@
 <form id='edit_form'>
 <input type='hidden' name="id" value='{{song.get('id')}}'>
+<h2>Song Info</h2>
 <ul>
 <li><label>Name: </label><input type='text' name='name' value="{{song.get("name", '')}}" required /></li>
 <li><label>Author(s):</label><input type='text'name='authors' value="{{song.get("authors", '')}}" /></li>
 <li><label>Category:</label><input type='text' name='category' value="{{song.get("category", '')}}" /></li>
 <li><label>Keywords:</label><input type='text' name='keywords' value="{{song.get("keywords", '')}}" /></li>
-<li><h2>Lyrics</h2>
+<li><h2>Pages</h2>
   <ul>
     {% for page in song.get("pages", []) %}
       <li><textarea name="page" class="page_textarea">{{page.lyrics}}</textarea></li>
@@ -13,5 +14,8 @@
    <li><textarea name="page" class="page_textarea"></textarea></li>
 </ul></li>
 <li><input type='submit' value='Save' /></li>
+{% if song.get("id"): %}
+<button id='delete'>Delete</button>
+  {% endif %}
 </ul>
 </form>

@@ -7,6 +7,7 @@
 {% include "song_navigation.jinja2" %}
 <div id="content">
 
+{% if song.get("pages"): %}
 {% for page in song.get("pages"): %}
 <div 
    id='page{{page.get("page_number")}}' 
@@ -17,7 +18,9 @@
 </div>
 
 {% endfor %}
-
+{% else: %}
+<h1>This song doesn't exist or has no pages.</h1>
+{% endif %}
 </div>
 
 {% endblock %}

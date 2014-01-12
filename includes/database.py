@@ -40,17 +40,17 @@ class Database:
     # Getters #
     ###########
 
-    def get_songlist(self):
+    def get_songlist(self, *args, **kwargs):
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
         return songs
 
-    def get_categories(self):
+    def get_categories(self, *args, **kwargs):
         categories = self.query("SELECT DISTINCT category FROM songs ORDER BY category")
         categories = [x["category"] for x in categories]
         return categories
     
 
-    def get_song(self, id):
+    def get_song(self, id, *args, **kwargs):
         song = self.query("""SELECT * FROM songs WHERE id=?""", (id,))
         if not song:
             return {}
@@ -66,8 +66,9 @@ class Database:
     ###########
 
     def save_song(self, formdata):
-        new_record = not formdata.get("id")
+        new_record = formdata.get("id") == 'None'
         print(new_record)
+        print(dict(formdata))
         qdata = {
             "name" : formdata.get("name"),
             "authors" : formdata.get("authors"),
@@ -99,3 +100,12 @@ class Database:
         self.query("""DELETE FROM pages WHERE song_id=:song_id and page_number > :num_pages""", {"song_id":song_id, "num_pages":num_pages}, False)
         
         return song_id.__str__()
+
+    def delete_song(self, formdata):
+        song_id = int(formdata.get("id"))
+        query = "DELETE FROM pages WHERE song_id=?"
+        self.query(query, (song_id,), False)
+        query = "DELETE FROM songs WHERE id=?"
+        self.query(query, (song_id,), False)
+
+        return ""

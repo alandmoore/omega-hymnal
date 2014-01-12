@@ -32,6 +32,7 @@ $(document).ready(function(){
     var numpages = $('.songpage').size();
     var pwidth = window.innerWidth;
     var pheight = function(){ return window.innerHeight - $("NAV").outerHeight()};
+    document.listwindow = window.opener;
 
     //page movment function
     function move_to_page(pagenumber){
@@ -70,13 +71,24 @@ $(document).ready(function(){
     $(document).on("click", "#edit_song A", function(){
 	$.get("/edit_song/"+document.song_id, function(data){
 	    $("#_dialog_").html(data).dialog(edit_dialog_options);
+	    $("#_dialog_ INPUT[name=category]").autocomplete({
+		source:"/json/categories",
+		minLength: 2
+	    });
+
 	});
     });
    //delete button
     $(document).on("click", "#delete", function(){
 	var really = confirm("You can't UNDO this.  Are you really certain you wish to annihilate this song?");
 	if (really){
-	    window.location="add_song.php?songid=" + $("#songid").val() + "&dodelete=1";
+	    var formdata = $(this).closest("FORM").serialize();
+	    $.post("/post/delete", data=formdata, function(){
+		console.log(window.opener);
+		document.listwindow.location.reload();
+		setTimeout(window.close, 500);
+	    });
+	    return false;
 	}
     });
 });

@@ -103,6 +103,10 @@ $(document).ready(function(){
     $(document).on("click", "#new_song A", function(){
 	$.get("edit_song/0", function(data){
 	    $("#_dialog_").html(data).dialog(edit_dialog_options);
+	    $("#_dialog_ INPUT[name=category]").autocomplete({
+		source:"/json/categories",
+		minLength: 2
+	    });
 	});
     });
 
@@ -124,13 +128,17 @@ $(document).ready(function(){
     //Post a song edit
     $(document).on("submit", "#edit_form", function(){
 	var formdata = $(this).serialize();
-	var new_song = $(this).find("INPUT[name=id]").val() === 0;
+	var new_song = $(this).find("INPUT[name=id]").val() === 'None';
 	$.post("/post/song", formdata, function(song_id){
+	    console.log(song_id);
 	    if (new_song){
 		window.open("/song/"+song_id);
+		$("#_dialog_").dialog("close");
 	    }else{
 		window.location = "/song/"+song_id;
 	    }
 	});
+	return false;
     });
+
 });
