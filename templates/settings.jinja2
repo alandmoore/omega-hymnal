@@ -1,0 +1,15 @@
+<form id=settings_form title='Application settings' method='POST' action='/post/settings'>
+<ul>
+<li><label>Page forward keycode: </label><input type='text' name='page_forward_key' value="{{settings.get("page_forward_key")}}" /></li>
+<li><label>Page backward keycode: </label><input type='text' name='page_backward_key' value="{{settings.get("page_backward_key")}}" /></li>
+<li><label>Show Author: </label><select name='show_author'>
+    {% for i, val in [("0", "No"), ("1", "Yes")]: %}
+      <option value={{i}} 
+	      {% if settings.get("show_author") == i %}selected{% endif %}
+	      >{{val}}</option>
+      {% endfor %}
+
+</select>
+<li><input type='submit' value='Save' /></li>
+</ul>
+</form>

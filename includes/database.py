@@ -96,6 +96,12 @@ class Database:
             export.append(self.get_song(song_id, no_prep_lyrics=True))
         return export
             
+    def get_settings(self):
+        settings = self.query("SELECT * FROM settings ORDER BY setting_name")
+        settings = dict([(x["setting_name"], x["setting_value"]) for x in settings])
+        return settings
+    
+        
     
     ###########
     # Setters #
@@ -104,7 +110,7 @@ class Database:
     def save_posted_song(self, formdata):
         new_record = formdata.get("id") == 'None'
         pages = [p for p in formdata.getlist("page") if p]
-        formdata = {key : value for key, value in formdata.items()}
+        formdata = dict([(key,  value) for key, value in formdata.items()])
         formdata["pages"] = pages
         return self.save_song(formdata, new_record)
 
@@ -158,3 +164,10 @@ class Database:
         self.query(query, (song_id,), False)
 
         return ""
+
+    def save_settings(self, formdata):
+        query = """INSERT OR REPLACE INTO settings(setting_name, setting_value) VALUES(?, ?)"""
+        for key, value in formdata.items():
+            self.query(query, (key, value), False)
+        return ""
+        

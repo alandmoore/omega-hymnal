@@ -27,28 +27,29 @@ app = Flask(__name__)
 @app.before_request
 def before_request():
     g.db = Database(app.config.get("DATABASE_FILE"))
+    settings = g.db.get_settings()
+    categories = g.db.get_categories()
+    g.std_args = {"settings" : settings, "categories" : categories}
 
 @app.route("/")
 def index():
     songs = g.db.get_songlist()
-    categories = g.db.get_categories()
-    return render_template("main.jinja2", songs=songs, categories=categories)
+    return render_template("main.jinja2", songs=songs, **g.std_args)
 
 @app.route("/song/<id>")
 def song(id):
     song = g.db.get_song(int(id))
-    return render_template("song.jinja2", song=song)
+    return render_template("song.jinja2", song=song, **g.std_args)
 
 @app.route("/edit_song/<id>")
 def edit_song(id):
     song = g.db.get_song(int(id))
-    return render_template("edit_form.jinja2", song=song)
+    return render_template("edit_form.jinja2", song=song, **g.std_args)
 
 @app.route("/export", methods=["GET", "POST"])
 def export():
     if request.method == "GET":
-        categories = g.db.get_categories()
-        return render_template("export_form.jinja2", categories=categories)
+        return render_template("export_form.jinja2", **g.std_args)
     else: #perform an export
         export = g.db.export_songs(request.form)
         #filedata = json.dumps(export).encode("utf-8")
@@ -59,7 +60,7 @@ def export():
 @app.route("/import", methods=["GET", "POST"])
 def import_songs():
     if request.method == "GET":
-        return render_template("import_form.jinja2")
+        return render_template("import_form.jinja2", **g.std_args)
     else:
         import_file = request.files["import_file"].stream.read()
         songs_imported = 0
@@ -72,13 +73,14 @@ def import_songs():
         
 @app.route("/settings")
 def settings():
-    return render_template("base.jinja2")
+    return render_template("settings.jinja2", **g.std_args)
 
 @app.route("/post/<callback>", methods=["POST"])
 def post(callback):
     callbacks = {
         "song" : g.db.save_posted_song,
-        "delete" : g.db.delete_song
+        "delete" : g.db.delete_song,
+        "settings" : g.db.save_settings
                  }
     if callback not in callbacks.keys():
         abort(403)

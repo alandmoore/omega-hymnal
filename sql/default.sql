@@ -3,8 +3,8 @@
 -- Default Settings
 
 INSERT OR REPLACE INTO settings(setting_name, setting_value) VALUES
-       ('page_forward_key', '.')
-       ,('page_backward_key', ',')
+       ('page_forward_key', '190')
+       ,('page_backward_key', '188')
        ,('show_author', '0')
        ,('search_author', '1')
        ,('search_category', '1')

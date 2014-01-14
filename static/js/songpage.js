@@ -33,7 +33,6 @@ $(document).ready(function(){
     var pwidth = window.innerWidth;
     var pheight = function(){ return window.innerHeight - $("NAV").outerHeight()};
     document.listwindow = window.opener;
-
     //page movment function
     function move_to_page(pagenumber){
 	var div = "#page"+pagenumber;
@@ -50,12 +49,12 @@ $(document).ready(function(){
 	//var firstpage = function(){move_to_page(1)};
 	//setTimeout('firstpage()', 500);
     $(document).keydown(function(e){
-	console.log(e.which);
-	if (e.which == 190 || e.which == 39){
+	console.log("keycode pressed:" + e.which);
+	if (e.which == parseInt(page_forward_key, 10) || e.which == 39){
 	    //forward page
 	    if (page < numpages){ page++;}
 	}
-	else if (e.which == 188 || e.which == 37){
+	else if (e.which == parseInt(page_backward_key,10) || e.which == 37){
 	    if (page > 1) page--;
 	}
 	else if (e.which == 36){

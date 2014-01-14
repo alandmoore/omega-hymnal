@@ -10,6 +10,11 @@
     <script src='{{url_for("static", filename="js/jquery-ui.js")}}'></script>
     {% block additional_headers %}
     {% endblock %}
+    <script>
+      {% for key, value in settings.items(): %}
+	var {{key}} = "{{value}}";
+      {% endfor %}
+      </script>
     <script src='{{url_for("static", filename="js/functions.js")}}'></script>
     </head>
 <body>

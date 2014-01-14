@@ -103,6 +103,7 @@ $(document).ready(function(){
     }
     $("_dialog_").hide();
 
+    //SONG EDITING
     //New song button
     $(document).on("click", "#new_song A", function(){
 	$.get("edit_song/0", function(data){
@@ -143,7 +144,7 @@ $(document).ready(function(){
 	});
 	return false;
     });
-
+    //EXPORT
     //Show the export dialog
     $(document).on("click", "#link_export", function(){
 	$.get("/export", function(data){
@@ -154,7 +155,7 @@ $(document).ready(function(){
 	    });
 	})
     });
-    
+    //IMPORT
     //Show the import dialog
     $(document).on("click", "#link_import", function(){
 	$.get("/import", function(data){
@@ -162,4 +163,52 @@ $(document).ready(function(){
 	});
     });
 
+    //Ajaxify the import dialog
+    $(document).on("submit", "#import_form", function(event){
+	event.preventDefault();
+	var formdata = new FormData($(this)[0]);
+
+	$.ajax({
+	    url : $(this).attr("action"),
+	    type: "POST",
+	    data : formdata,
+	    async : false,
+	    cache : false,
+	    contentType : false,
+	    processData : false,
+	    success : function(data){
+		$("#_dialog_").html(data).dialog(default_dialog_options);
+	    }
+	});
+
+	return false;
+    });
+
+    //SETTINGS
+    //Show the settings dialog
+    $(document).on("click", "#link_settings", function(event){
+	$.get("/settings", function(data){
+	    show_popup_form(data);
+	});
+    });
+    //the "page forward key" and "page backward key" fields need to hold a keycode, not a character
+    $(document).on("keydown", "INPUT[name=page_forward_key], INPUT[name=page_backward_key]", function(e){
+	$(this).val(e.which);
+	e.preventDefault();
+	return false;
+    });
+
+    //submit settings
+    $(document).on("submit", "#settings_form", function(e){
+	e.preventDefault();
+	var data = $(this).serialize();
+	$.post(
+	    $(this).attr("action"),
+	    data,
+	    function(){
+		$("#_dialog_").dialog("close");
+	    }
+	)
+	return false;
+    });
 });
