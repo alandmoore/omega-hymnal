@@ -209,7 +209,14 @@ FORM UL LI
   width: 90%;
   float:none;
   height: auto;
+   padding: .2em;
+   border-radius: 1em;
  }
+
+FORM UL LI.selected
+{
+   background-color: lightslategrey;
+}
 
 FORM UL LI LABEL
 { 
@@ -277,6 +284,24 @@ SPAN.chord_icon
   margin: .5em;
 }
 
+#export_form {
+   float: left;
+   width: 75%;
+}
+
+#export_preview {
+   float: right;
+   width: 20%;
+   background-color: silver;
+   text-align: center;
+   border-radius: .5em;
+}
+
+#songs_to_export {
+   margin-left: 0;
+   overflow: auto;
+   height: 13em;
+}
 
 /**********/
 /* FOOTER */

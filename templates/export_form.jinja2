@@ -1,17 +1,22 @@
 <form id='export_form' method='POST' action='/export' title="Export songs">
 <ul>
 <li><input type=radio name='type' value='all' id='type_all' checked/><label for='type_all'>All songs</label></li>
-<li><input type=radio name='type' value='name' id='type_name' /><label for='type_name'>Song by name: </label><input type='text' name='name' /></li>
+<li><input type=radio name='type' value='name' id='type_name' /><label for='type_name'>Song by name: </label><input type='text' name='name' required /></li>
 <li><input type=radio name='type' value='category' id='type_category' /><label for='type_category'>Songs in category: </label>
-  <select name='category'>
+  <select name='category' required>
+    <option value=''></option>
     {% for category in categories: %}
       <option value="{{category}}">{{category}}</option>
       {% endfor %}
       </select></li>
 <li><input type='radio' name='type' value='keyword' id='type_keyword' /><label for='type_keyword'>Songs where keywords contains: </label>
-  <input type='text' name='keywords' /></li>
+  <input type='text' name='keywords' required /></li>
 <li><input type='radio' name='type' value='author' id='type_author' /><label for='type_author'>Songs where author(s) contains: </label>
-  <input type='text' name='authors' /></li>
+  <input type='text' name='authors' required /></li>
 <li><input type='submit' value='Export' /></li>
 </ul>
 </form>
+<div id='export_preview'>
+<h2>Songs to export:</h2>
+<ul id='songs_to_export'></ul>
+</div>

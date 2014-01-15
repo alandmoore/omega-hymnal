@@ -93,12 +93,12 @@ def json_get(callback):
     callbacks = {
         "categories" : g.db.get_categories,
         "names"  : g.db.get_names,
-        "export"  : g.db.export_songs
+        "export"  : g.db.get_export_song_ids
         }
     if callback not in callbacks.keys():
         abort(403)
     else:
-        result = callbacks.get(callback)(**request.args)
+        result = callbacks.get(callback)(**request.args.to_dict(flat=True))
         return json.dumps(result)
 
 if __name__ == "__main__":

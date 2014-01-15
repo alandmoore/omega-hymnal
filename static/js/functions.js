@@ -153,8 +153,41 @@ $(document).ready(function(){
 		source:"/json/names",
 		minLength: 2
 	    });
-	})
+	    //disable fields until the matching radio button is clicked.
+	    $("#export_form INPUT[name=type]").change(function(){
+		var selected = $("#export_form INPUT[name=type]:checked");
+		$("#export_form INPUT[type=text], #export_form SELECT").attr("disabled", 1);
+		selected.closest("LI").find("INPUT[type=text], SELECT").removeAttr("disabled");
+		$("#export_form LI").removeClass("selected");
+		selected.closest("LI").addClass("selected");
+		if (selected.val()==='all'){
+		    $("#songs_to_export").html("(All)");
+		}else{
+		$("#songs_to_export").html("");
+		}
+	    });
+	    $("#export_form INPUT[name=type]").trigger("change");
+	});
     });
+    //When the export form is changed, display the songs to be exported
+    $(document).on("change keyup autocompleteselect", 
+		   "#export_form INPUT[type=text], #export_form SELECT", 
+		   function(e, ui){
+		       var value = (ui && ui.item.value)|| $(this).val();
+		       if (value !== ''){
+	    var formdata = $("#export_form").serialize();
+	    $.getJSON("/json/export", formdata, function(data){
+		var dest = $('#songs_to_export');
+		dest.html('');
+		$.each(data, function(i, val){
+		    dest.append("<li>" + val + "</li>");
+		});
+	    })
+	}else{
+	    $("#song_to_export").html("");
+	}
+    });
+
     //IMPORT
     //Show the import dialog
     $(document).on("click", "#link_import", function(){

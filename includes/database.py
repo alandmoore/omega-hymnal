@@ -46,14 +46,14 @@ class Database:
         return songs
 
     def get_categories(self, *args, **kwargs):
-        term = kwargs.get("term", [''])[0] + '%'
+        term = kwargs.get("term", '') + '%'
         categories = self.query("SELECT DISTINCT category FROM songs WHERE category like ? ORDER BY category", (term,))
         categories = [x["category"] for x in categories]
         return categories
 
     def get_names(self, *args, **kwargs):
         print(kwargs)
-        term = kwargs.get("term", [''])[0] + "%"
+        term = kwargs.get("term", '') + "%"
         names = self.query("SELECT DISTINCT name FROM songs WHERE name like ? ORDER BY name", (term,))
         names = [x["name"] for x in names]
         return names
@@ -71,28 +71,37 @@ class Database:
         return song
 
     
-    def export_songs(self, formdata, *args, **kwargs):
+    def get_export_song_ids(self, formdata=None, *args, **kwargs):
+        if formdata is None:
+            formdata = kwargs
         export_type = formdata.get("type")
+        print(export_type)
         if export_type == "name":
             qdata = {"name" : formdata.get("name")}
-            query = "SELECT id FROM songs WHERE name like :name"
+            query = "SELECT id, name FROM songs WHERE name like :name"
         elif export_type == "category":
             qdata = {"category" :formdata.get("category")}
-            query = "SELECT id FROM songs WHERE category like :category"
+            query = "SELECT id, name FROM songs WHERE category like :category"
         elif export_type == "keyword":
             qdata = {"keywords" : "%{}%".format(formdata.get("keywords"))}
-            query = "SELECT id FROM songs WHERE keywords like :keywords"
+            query = "SELECT id,name FROM songs WHERE keywords like :keywords"
         elif export_type == "author":
             qdata = {"authors" : "%{}%".format(formdata.get("authors"))}
-            query = "SELECT id FROM songs WHERE authors like :authors"
+            query = "SELECT id,name FROM songs WHERE authors like :authors"
         else:  #Default to "all"
             qdata = {}
-            query = "SELECT id FROM songs"
+            query = "SELECT id,name FROM songs"
+        print (query)
+        print (qdata)
         idlist = self.query(query, qdata)
-        idlist = [x["id"] for x in idlist]
+        idlist = dict([(x["id"], x["name"]) for x in idlist])
 
+        return idlist
+
+    def export_songs(self, formdata, *args, **kwargs):
+        idlist = self.get_export_song_ids(formdata)
         export = []
-        for song_id in idlist:
+        for song_id in idlist.keys():
             export.append(self.get_song(song_id, no_prep_lyrics=True))
         return export
             
