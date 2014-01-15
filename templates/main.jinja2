@@ -27,6 +27,12 @@
 > 
   <span class="song_title">{{song.get("name")}}</span>
   <span class="keywords">{{song.get("keywords")}}</span>
+  {% if settings.get("search_author") == '1': %}
+  <span class="hidden">{{song.get("authors")}}</span>
+  {% endif %}
+  {% if settings.get("search_category")=='1': %}
+    <span class="hidden">{{song.get("category")}}</span>
+  {% endif %}
   {% if song.get("has_chords") == 1: %}
     <span class=chord_icon>&#x266B;</span>
 {% endif %}

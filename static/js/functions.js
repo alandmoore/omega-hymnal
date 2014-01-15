@@ -48,10 +48,10 @@ function show_popup_form(data){
 
 $(document).ready(function(){
         //even out the navigation
-    setTimeout(function(){
-	var navitems = $("NAV > UL > LI");
-	navitems.css("width", Math.floor((window.innerWidth/navitems.size()) * .95));
-    }, 200);
+    //setTimeout(function(){
+//	var navitems = $("NAV > UL > LI");
+//	navitems.css("width", Math.floor((window.innerWidth/navitems.size()) * .95));
+  //  }, 200);
 
     $("#search").focus();
     $("#search").keyup(function(){

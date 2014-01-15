@@ -24,6 +24,15 @@ input[type=text]
 { 
   min-width: 30em;
  }
+
+.hidden
+{
+   display: block;
+   overflow: hidden;
+   width: 0;
+   height: 0;
+}
+
 DIV.songpage
 { 
   font-size: 5em;
@@ -55,12 +64,41 @@ NAV UL
 { 
   list-style: none;
   margin-top: 0px;
-  padding: 10px;
+  padding: 0;
  }
+
+#nav_left
+{
+   float: left;
+   width: 25%;
+}
+
+#nav_right
+{
+   float: right;
+   width: 25%;
+}
+
+#nav_right LI
+{
+   float: right;
+   text-align: right;
+}
+
+#songtitle{
+   text-align: center;
+   width: 48%;
+   float: left;
+   margin: 0;
+   padding: 1%;
+}
 
 NAV UL LI
 { 
   float: left;
+   min-width: 5em;
+   width: 18%;
+   padding: 10px;
  }
 
 NAV A
@@ -86,6 +124,15 @@ NAV UL LI UL LI
   padding: 0px 10px 0px 10px;
  }
 
+#authors_nav
+{
+   font-size: .5em;
+   color: #DDD;
+   clear: both;
+   text-align: center;
+   width: 100%;
+   margin: 0;
+}
 
 #content
 { 

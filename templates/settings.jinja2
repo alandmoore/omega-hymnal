@@ -2,14 +2,28 @@
 <ul>
 <li><label>Page forward keycode: </label><input type='text' name='page_forward_key' value="{{settings.get("page_forward_key")}}" /></li>
 <li><label>Page backward keycode: </label><input type='text' name='page_backward_key' value="{{settings.get("page_backward_key")}}" /></li>
-<li><label>Show Author: </label><select name='show_author'>
+<li><label>Show Author on song page: </label><select name='show_author'>
     {% for i, val in [("0", "No"), ("1", "Yes")]: %}
       <option value={{i}} 
 	      {% if settings.get("show_author") == i %}selected{% endif %}
 	      >{{val}}</option>
       {% endfor %}
+</select></li>
+<li><label>Match author on song search: </label><select name='search_author'>
+    {% for i, val in [("0", "No"), ("1", "Yes")]: %}
+      <option value={{i}} 
+	      {% if settings.get("search_author") == i %}selected{% endif %}
+	      >{{val}}</option>
+      {% endfor %}
+</select></li>
+<li><label>Match category on song search: </label><select name='search_category'>
+    {% for i, val in [("0", "No"), ("1", "Yes")]: %}
+      <option value={{i}} 
+	      {% if settings.get("search_category") == i %}selected{% endif %}
+	      >{{val}}</option>
+      {% endfor %}
+</select></li>
 
-</select>
 <li><input type='submit' value='Save' /></li>
 </ul>
 </form>

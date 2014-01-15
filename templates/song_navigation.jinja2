@@ -1,20 +1,14 @@
 <nav>
-<ul>
-{% for description, url, id in [
-  ("Home", url_for("index"), "link_home"),
-  ("Edit", "#", "edit_song"),
-  ("", None, "songtitle"),
-  ("", None, "pagecounter")
-  ]%}
-<li id="{{id}}">
-{% if url: %}
-<a href="{{url}}">
-{{description}}
-</a>
-{% else: %}
-{{description}}
-{% endif %}
-</li>
-{% endfor %}
+<ul id="nav_left">
+<li id="link_home"><a href="{{url_for("index")}}">Home</a></li>
+<li id="edit_song"><a href="#">Edit</a></li>
 </ul>
+<div id="songtitle"></div>
+<ul id="nav_right">
+<li id="pagecounter"></li>
+
+</ul>
+  {% if settings.get("show_author") == '1': %}
+    <div id="authors_nav">{{song.get("authors")}}</div>
+    {% endif %}
 </nav>
