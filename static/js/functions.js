@@ -42,8 +42,8 @@ var default_dialog_options = {
 }
 
 function show_popup_form(data){
-    var title = $(data).attr("title")
-    $("#_dialog_").html(data).attr("title", title).dialog(default_dialog_options);
+    default_dialog_options.title = $(data).attr("title");
+    $("#_dialog_").html(data).dialog(default_dialog_options);
 }
 
 $(document).ready(function(){
