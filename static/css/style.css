@@ -114,15 +114,32 @@ NAV SPAN
  }
 NAV UL LI UL 
 { 
+   display: none;
   margin: 0px;
   padding: 0px;
+   background-color: #333;
+   border-radius: .5em;
+   opacity: .8;
  }
+
+NAV UL LI:hover UL {
+   display: block;
+   position: absolute;
+}
 
 NAV UL LI UL LI
 { 
   margin-right: 10px;
   padding: 0px 10px 0px 10px;
+   float: none;
+   width: 100%;
+   border-radius: .5em;
  }
+
+NAV UL LI UL LI:hover
+{
+   background-color: #555;
+}
 
 #authors_nav
 {

@@ -2,6 +2,7 @@
 -- Designed for sqlite3
 
 -- Songs table
+DROP TABLE IF EXISTS songs;
 
 CREATE TABLE IF NOT EXISTS songs (
        id    	   INTEGER PRIMARY KEY AUTOINCREMENT
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS songs (
 );
 
 -- Pages table
+DROP TABLE IF EXISTS pages;
 
 CREATE TABLE IF NOT EXISTS pages (
        song_id	    INTEGER REFERENCES songs(id)
@@ -22,6 +24,7 @@ CREATE TABLE IF NOT EXISTS pages (
 
 
 -- Settings table
+DROP TABLE IF EXISTS settings;
 
 CREATE TABLE IF NOT EXISTS settings(
        setting_name TEXT PRIMARY KEY

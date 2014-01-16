@@ -1,0 +1,18 @@
+<H1>Database File Problem</H1>
+
+<p>Your configured database file, &quot;{{filename}}&quot;, appears to be missing some critical tables:</p>
+<ul>
+  {% for table in missing %}
+    <li>{{table}}</li>
+  {% endfor %}
+</ul>
+
+<p>This can happen if your application is misconfigured, the file is unaccessible, or if this is the first time you've run the program and nothing has been initialized.</p>
+
+<p>If you want to initialize the database file with a set of empty tables, click &quot;Initialize&quot; below.  Otherwise, close the browser, shut down Omega Hymnal, and inspect your database file using sqlite3.</p>
+
+<FORM action='/post/initialize' method='POST'>
+<input type='hidden' name='init_db', value=1 />
+<input type='hidden' name='_redirect_' value='/' />
+<input type='submit' value='Initialize' />
+</FORM>

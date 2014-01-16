@@ -60,9 +60,7 @@ $(document).ready(function(){
 	if (term.length > 0){
 	$(".songlink").hide();
 	$(".songlink:containsi("+term+")").show();
-	}
-	else
-	{
+	}else{
 	    $(".songlink").show();
 	}
 	$("#category_select").attr("value", "");
@@ -243,5 +241,33 @@ $(document).ready(function(){
 	    }
 	)
 	return false;
+    });
+    
+    //INITIALIZE
+    //Call the initialize form
+    $(document).on("click", "#link_initialize", function(event){
+	event.preventDefault();
+	$.get("/initialize", function(data){
+	    show_popup_form(data);
+	    $("#initialize_form INPUT[type=submit]").attr("disabled", 1);
+	    $(document).on("change", "#init_db", function(){
+		if ($(this).is(":checked")){
+		    $("#initialize_form INPUT[type=submit]").removeAttr("disabled");
+		}else{
+		    $("#initialize_form INPUT[type=submit]").attr("disabled", 1);
+		}
+	    });
+	});
+    });
+    //Handle submit
+    $(document).on("submit", "#initialize_form", function(event){
+	event.preventDefault();
+	var location = window.location;
+	var formdata = $(this).serialize();
+	$.post($(this).attr("action"), formdata, function(){
+	    window.location = location;
+	    window.location.reload();
+	})
+	return false
     });
 });

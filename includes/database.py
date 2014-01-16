@@ -6,6 +6,7 @@ import sqlite3
 from .util import prep_lyrics
 from flask import json
 
+
 class Database:
 
     def __init__(self, dbfile):
@@ -36,7 +37,27 @@ class Database:
             self.cx().commit()
             return None
 
-        
+    def initialize(self):
+        """
+        Creates a fresh, empty database.
+        """
+        with open("sql/schema.sql", 'r') as sqlfile:
+            self.cu().executescript(sqlfile.read())
+
+    def do_initialize_db(self, formdata, *args, **kwargs):
+        confirm = formdata.get("init_db")
+        if confirm:
+            self.initialize()
+        return ''
+
+    def get_missing_tables(self):
+        query = """SELECT name FROM sqlite_master WHERE type='table'"""
+        are_tables = [x.get("name") for x in self.query(query)]
+        print("Tables that exist: " + are_tables.__str__())
+        should_be_tables = ["settings", "songs", "pages"]
+        missing = [table for table in should_be_tables if table not in are_tables]
+        return missing
+    
     ###########
     # Getters #
     ###########

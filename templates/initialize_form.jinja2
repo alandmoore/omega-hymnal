@@ -1,0 +1,12 @@
+<form id="initialize_form" title='Initialize Database'  action='/post/initialize' method='POST'>
+<h1>STOP!</h1>
+<p>Inititializing will <strong>delete all songs</strong> from your database and start you with a completely empty Omega Hymnal.  It is <strong>not</strong> reversible.</p>
+
+<p>If this is what you really, really want, check the box and click "Initialize".</p>
+
+<label for='init_db'  >Initialize Database file &quot;{{filename}}&quot;?</label>
+<input type='checkbox' name='init_db' id='init_db' />
+<br /><br />
+<input type='submit' value='Initialize' />
+
+</form>

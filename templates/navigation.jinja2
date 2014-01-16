@@ -3,15 +3,26 @@
 {% for description, url, id in [
   ("Home", url_for("index"), "link_home"),
   ("New song", "#", "new_song"),
-  ("Import", "#", "link_import"),
-  ("Export", "#", "link_export"),
-  ("Settings", "#", "link_settings")
+  ("Tools", [
+     ("Import", "#", "link_import"),
+     ("Export", "#", "link_export"),
+     ("Settings", "#", "link_settings"),
+     ("Initialize Database", "#", "link_initialize")
+  ], "link_tools")
   ]%}
 <li id="{{id}}">
-{% if url: %}
+{% if url is string %}
 <a href="{{url}}">
 {{description}}
 </a>
+{% elif url is iterable %}
+<a href="#">
+{{description}}
+  </a>
+<ul>
+{% for description, suburl, id in url%}
+  <li id="{{id}}"><a href="{{suburl}}">{{description}}</a></li>
+{% endfor %}
 {% else: %}
 {{description}}
 {% endif %}
