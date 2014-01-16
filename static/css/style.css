@@ -125,11 +125,13 @@ NAV UL LI UL
 NAV UL LI:hover UL {
    display: block;
    position: absolute;
+   right: 0;
+   width: 10em;
 }
 
 NAV UL LI UL LI
 { 
-  margin-right: 10px;
+  margin: 0;
   padding: 0px 10px 0px 10px;
    float: none;
    width: 100%;
