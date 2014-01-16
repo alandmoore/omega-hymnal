@@ -30,6 +30,8 @@ Installation
 - Download Omega Hymnal and unzip it to a folder
 - Run omegahymnal.py
 - Point your web browser to http://localhost:5000
+- You'll be prompted to initialize a database file.  Click "initialize".
+- If you want some initial songs to play with, go to Tools->Import.  You'll find an import file with songs in the "songs" folder.
 
 Advanced
 --------

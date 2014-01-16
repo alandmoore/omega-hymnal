@@ -50,14 +50,16 @@ $(document).ready(function(){
 	//setTimeout('firstpage()', 500);
     $(document).keydown(function(e){
 	console.log("keycode pressed:" + e.which);
-	if (e.which == parseInt(page_forward_key, 10) || e.which == 39){
+	if (("page_forward_key" in window && e.which == parseInt(page_forward_key, 10) )
+	    || e.which == $.ui.keyCode.RIGHT){
 	    //forward page
 	    if (page < numpages){ page++;}
 	}
-	else if (e.which == parseInt(page_backward_key,10) || e.which == 37){
+	else if (("page_backward_key" in window && e.which == parseInt(page_backward_key,10) )
+		 || e.which == $.ui.keyCode.LEFT){
 	    if (page > 1) page--;
 	}
-	else if (e.which == 36){
+	else if (e.which == $.ui.keyCode.BACKSPACE){
 	    $("#link_home").trigger("click");
 	}else if (e.which >= 49 && e.which <=57 && (e.which - 48) <= numpages){
 	    //if you hit 1-9, go to that page.
