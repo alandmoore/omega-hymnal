@@ -155,8 +155,10 @@ NAV UL LI UL LI:hover
 
 #content
 { 
-  padding: 20px;
-  text-align: justify;
+  padding: 0;
+  text-align: left;
+   width: 100%;
+   margin: 0;
 }
 
 /************/
@@ -272,6 +274,14 @@ FORM INPUT[type=text]
   z-index: 50;
   width: 100%;
  }
+
+DIV.songpage
+{
+   display: inline-block;
+   width: auto;
+   margin-left: auto;
+   margin-right: auto;
+}
 
 SPAN.songline
 { 

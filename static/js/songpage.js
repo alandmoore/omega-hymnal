@@ -1,6 +1,8 @@
 //Functions for the omega hymnal song page
 
-function fitDivToPage(div, page_width, page_height) {
+function fitDivToPage(div) {
+    var page_width = window.innerWidth;
+    var page_height =  window.innerHeight - $("NAV").outerHeight();
     var numbreaks = $(div +" > br").size() +1;
     //the proper size according to height
     var target_width = $(div).innerWidth();
@@ -15,13 +17,14 @@ function fitDivToPage(div, page_width, page_height) {
     }
     $(div).css("white-space", "nowrap");
     $(div).css("font-size", font_size+"px");
-    console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+    //console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     while (($(div)[0].scrollWidth > target_width || $(div)[0].scrollHeight > target_height) && font_size > 12){
 	//	console.log(font_size);
 	font_size *= .9;
 	$(div).css("font-size", font_size+"px");
+ 
+    //console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     }
-    console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     $(div).css("line-height", line_size+"px");
     $(".chord").css("bottom", (line_size * .3)+"px");
 }
@@ -30,8 +33,6 @@ function fitDivToPage(div, page_width, page_height) {
 $(document).ready(function(){
     var page = 1;
     var numpages = $('.songpage').size();
-    var pwidth = window.innerWidth;
-    var pheight = function(){ return window.innerHeight - $("NAV").outerHeight()};
     document.listwindow = window.opener;
     //page movment function
     function move_to_page(pagenumber){
@@ -40,8 +41,7 @@ $(document).ready(function(){
 	$(div).stop().fadeIn(200);
 	$("#songtitle").html("<span>&quot;" + $(div).attr("data-songtitle") + "&quot;</span>");
 	$('#pagecounter').html("<span>Page " + pagenumber + " / " + numpages + "</span>");
-	console.log("page_height: ", pheight());
-	fitDivToPage(div, pwidth, pheight());
+	setTimeout( function(){fitDivToPage(div);}, 100);
     }
     
     if (numpages > 0){
