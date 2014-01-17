@@ -20,8 +20,8 @@ Requirements
 ------------
 
 - Python 3: http://www.python.org
-- Flask 1.0: http://flask.pocoo.org
-- Any modernish web-browser (Firefox/Chrome/Safari)
+- Flask 0.1.0: http://flask.pocoo.org
+- Any modernish web-browser (Firefox/Chrome/Safari).  Not sure if IE will work.
 
 Installation
 ------------
@@ -84,3 +84,19 @@ As always, there are three ways to get a feature added to Omega Hymnal:
 - Contact me and offer to sponsor the feature's development in some way (money, gifts, coffee, etc).
 - Pray earnestly that someone else does one of the other two things.
 
+Songs
+-----
+
+It would be really nice for users if Omega Hymnal came with a useful selection of songs.  If you would like to contribute some, you can send me the .omegahymnal (export) file and I'll add it if it meets standards.
+
+Songs must meet these requirements:
+
+- They must be *Public Domain* or otherwise licensed in a way that's compatible with the project's GPL3 license.  Songs from before 1930 are usually safe.  The hot new song on Christian radio is usually not. :-)  Note that many old hymns have been "modernized" recently with added sections; these are probably under copyright and shouldn't be included.
+- Stick to well-known, mainstream songs.  There's no reason to load the database with obscure stuff nobody will know.  
+- Include authors when available.  Include keywords too.  Keywords are words a person might associate with the song that aren't part of the title but you'd want to search on.  For example, "The First Noel" might have keywords "christmas angels shepherds star nativity".  Include a category only if it's obvious (e.g. Christmas, Easter, or Children).
+- I've included Christian hymns so far, but nonreligious songs or songs from other faith traditions are also fine; if any are submitted I will probably split these out into multiple files organized by faith.  I reserve the right not to include offensive or objectionable songs.
+- Until I have a way to vet non-English songs for copyright or content problems, I'm going to have to accept only English songs.  I'm open to discussion on this if you have a solution to the potential problems it poses.
+- Try to include chords if possible.  Please keep them simple and reasonably "campfire guitarist" friendly (I know, I love jazz too, but...).
+
+
+If you intend to do a large contribution of songs, please discuss it with me first so we can set some standards and avoid a lot of wasted or duplicated effort.
