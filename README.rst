@@ -47,7 +47,7 @@ Usage
 
 Omega Hymnal is pretty simple to use.  Select a song from the list and it displays in a new browser tab on the screen.  The text size is meant to auto-adjust to the available screen width.
 
-By default the left and right arrow keys move you between pages of the song.  The spacebar can be used to "resize" the text if something goes bad.
+By default the left and right arrow keys move you between pages of the song.  Shift+Backspace closes the song tab.  The spacebar can be used to "resize" the text if something goes bad, and you can hit a number from 1 to 9 to go directly to that page, if it exists.
 
 Chords
 ------

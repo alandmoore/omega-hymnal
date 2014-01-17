@@ -49,6 +49,7 @@ $(document).ready(function(){
 	//var firstpage = function(){move_to_page(1)};
 	//setTimeout('firstpage()', 500);
     $(document).keydown(function(e){
+	console.log(e);
 	console.log("keycode pressed:" + e.which);
 	if (("page_forward_key" in window && e.which == parseInt(page_forward_key, 10) )
 	    || e.which == $.ui.keyCode.RIGHT){
@@ -59,7 +60,7 @@ $(document).ready(function(){
 		 || e.which == $.ui.keyCode.LEFT){
 	    if (page > 1) page--;
 	}
-	else if (e.which == $.ui.keyCode.BACKSPACE){
+	else if (e.which == $.ui.keyCode.BACKSPACE && e.shiftKey){
 	    $("#link_home").trigger("click");
 	}else if (e.which >= 49 && e.which <=57 && (e.which - 48) <= numpages){
 	    //if you hit 1-9, go to that page.
