@@ -201,6 +201,21 @@ NAV UL LI UL LI:hover
   line-height: 1.5em;
   padding: 4px;
 }
+#songlist LI .keywords
+{ 
+  font-size: .6em;
+  color: #555;
+  font-style: italic;
+  z-index: 800;
+ }
+
+#songlist LI .chord_icon
+{ 
+  background-color: lightblue;
+  border-radius: 50%;
+  margin: .5em;
+   float: right;
+}
 
 #songlist LI .author
 {
@@ -281,7 +296,7 @@ FORM INPUT[type=text]
 #filter_controls
 { 
   position: fixed;
-  top: 3em;
+  top: 4em;
   background-color: #333;
   opacity: .9;
   z-index: 50;
@@ -311,21 +326,7 @@ SPAN.chord
   overflow: show;
  }
 
-.keywords
-{ 
-  font-size: .6em;
-  color: #555;
-  font-style: italic;
-  z-index: 800;
- }
 
-SPAN.chord_icon
-{ 
-  background-color: lightblue;
-  border-radius: 50%;
-  margin: .5em;
-   float: right;
-}
 
 #export_form {
    float: left;
@@ -336,8 +337,12 @@ SPAN.chord_icon
    float: right;
    width: 20%;
    background-color: silver;
-   text-align: center;
+   text-align: left;
    border-radius: .5em;
+}
+
+#export_preview LI {
+   border-bottom: 1px dotted #333;
 }
 
 #songs_to_export {
