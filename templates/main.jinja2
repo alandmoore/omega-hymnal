@@ -24,18 +24,20 @@
    data-song_id={{song.get("id")}} 
    data-category="{{song.get("category")}}"
    data-href="{{url_for("song", id=song.get("id"))}}"
-> 
-  <span class="song_title">{{song.get("name")}}</span>
+>  
+{% if song.get("has_chords") == 1: %}
+  <span class=chord_icon>&#x266B;</span>
+{% endif %}  
+<span class="song_title">{{song.get("name")}}</span>
+{% if settings.get("search_author") == '1': %}
+  <span class="author">{{song.get("authors")}}</span>
+{% endif %}
+{% if settings.get("search_category")=='1': %}
+  <span class="category">({{song.get("category")}})</span>
+{% endif %}
+
+
   <span class="keywords">{{song.get("keywords")}}</span>
-  {% if song.get("has_chords") == 1: %}
-    <span class=chord_icon>&#x266B;</span>
-  {% endif %}
-  {% if settings.get("search_author") == '1': %}
-  <span class="hidden">{{song.get("authors")}}</span>
-  {% endif %}
-  {% if settings.get("search_category")=='1': %}
-    <span class="hidden">{{song.get("category")}}</span>
-  {% endif %}
 
 </li>
 {% endfor %}
