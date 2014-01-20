@@ -32,7 +32,7 @@
 {% if settings.get("search_author") == '1': %}
   <span class="author">{{song.get("authors")}}</span>
 {% endif %}
-{% if settings.get("search_category")=='1': %}
+{% if settings.get("search_category")=='1' and song.get("category"): %}
   <span class="category">({{song.get("category")}})</span>
 {% endif %}
 
