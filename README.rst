@@ -49,6 +49,14 @@ Omega Hymnal is pretty simple to use.  Select a song from the list and it displa
 
 By default the left and right arrow keys move you between pages of the song.  Shift+Backspace closes the song tab.  The spacebar can be used to "resize" the text if something goes bad, and you can hit a number from 1 to 9 to go directly to that page, if it exists.
 
+Editing Songs
+-------------
+
+Clicking "New Song" on the main screen or "Edit" on a song screen will let you edit the song.  You can fill in the name, authors, category, and kewords at the top.  Each page is represented by a text box under the "Pages" header.  As you put lyrics in the last empty text box, a new empty text box will appear after it.  The order of pages will be as you enter.
+
+Alternately, you can insert a "[pagebreak]" tag (lowercase, in square brackets as shown) to break a page within a single text box.  This is useful if you want to edit your lyrics in an external text editor, or if you need to break up a page in the middle of a long song.  Note that the "[pagebreak]" tag will not be saved with the song, but rather the pages will be saved broken out at that point.
+
+
 Chords
 ------
 
@@ -61,9 +69,6 @@ The following substitutions are made when the chords are displayed:
 
 - The pound sign "#" becomes a sharp symbol
 - The lower-case 'b' becomes a flat symbol
-
-
-NOTE: the UI is currently in a state of flux, this documentation will try to keep up.
 
 
 Contributing

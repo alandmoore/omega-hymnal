@@ -3,9 +3,8 @@ Database model for OMEGA HYMNAL.
 """
 
 import sqlite3
-from .util import prep_lyrics
-from flask import json
-
+from .util import prep_lyrics, debug
+from itertools import chain
 
 class Database:
 
@@ -53,7 +52,7 @@ class Database:
     def get_missing_tables(self):
         query = """SELECT name FROM sqlite_master WHERE type='table'"""
         are_tables = [x.get("name") for x in self.query(query)]
-        print("Tables that exist: " + are_tables.__str__())
+        debug("Tables that exist: " + are_tables.__str__())
         should_be_tables = ["settings", "songs", "pages"]
         missing = [table for table in should_be_tables if table not in are_tables]
         return missing
@@ -73,7 +72,7 @@ class Database:
         return categories
 
     def get_names(self, *args, **kwargs):
-        print(kwargs)
+        debug(kwargs)
         term = kwargs.get("term", '') + "%"
         names = self.query("SELECT DISTINCT name FROM songs WHERE name like ? ORDER BY name", (term,))
         names = [x["name"] for x in names]
@@ -96,7 +95,7 @@ class Database:
         if formdata is None:
             formdata = kwargs
         export_type = formdata.get("type")
-        print(export_type)
+        debug(export_type)
         if export_type == "name":
             qdata = {"name" : formdata.get("name")}
             query = "SELECT id, name FROM songs WHERE name like :name"
@@ -165,11 +164,13 @@ class Database:
         else:
             query = """UPDATE songs SET name=:name, authors=:authors, category=:category, keywords=:keywords WHERE id=:id """
             qdata["id"] = formdata.get("id")
-        print(query, qdata)
+        debug(query, qdata)
         self.query(query, qdata, False)
         song_id = (new_record and self.cu().lastrowid) or int(formdata.get("id"))
 
         pages = formdata.get("pages")
+        # Process pagebreaks in the lyric pages
+        pages = [page.strip() for page in chain(*[p.split("[pagebreak]") for p in pages]) if page.strip()]
         for pagenum, page in enumerate(pages):
             qdata = {
                 "song_id" : song_id,
@@ -177,8 +178,8 @@ class Database:
                 "lyrics" : page
                 }
             query = "INSERT OR REPLACE INTO pages (song_id, page_number, lyrics) VALUES (:song_id, :page_number, :lyrics)"
-            print(query)
-            print(qdata)
+            debug(query)
+            debug(qdata)
             self.query(query, qdata, False)
         #remove orphan pages from the song
         num_pages = len(pages)

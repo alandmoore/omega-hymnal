@@ -19,6 +19,7 @@ and your favorite standards-compliant web browser.
 
 from flask import Flask, g, render_template, request, json,  abort, Response, redirect
 from includes.database import Database
+from includes.util import debug
 import zlib
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ app = Flask(__name__)
 
 @app.before_request
 def before_request():
+    g.debug = app.config.get("DEBUG")
     g.db = Database(app.config.get("DATABASE_FILE"))
     g.missing_tables = g.db.get_missing_tables()
     if len(g.missing_tables) > 0:
@@ -72,7 +74,7 @@ def import_songs():
     else:
         import_file = request.files["import_file"].stream.read()
         songs_imported = 0
-        print(type(import_file))
+        debug(type(import_file))
         import_data = json.loads(zlib.decompress(import_file).decode("utf-8"))
         for song in import_data:
             g.db.save_imported_song(song)
