@@ -2,7 +2,9 @@
 Miscellaneous utility functions for Omega Hymnal
 """
 
-import re
+import re, sys
+from flask import g
+
 
 def prep_lyrics(lyrics):
     chord_replacements = [
@@ -32,3 +34,10 @@ def remove_chords(lyrics):
     chord_regex = re.compile("(\{.*?\})")
     lyrics = chord_regex.sub('', lyrics)
     return lyrics
+
+def debug(*messages):
+    if g.debug:
+        sys.stderr.write("\n".join([m.__str__() for m in messages]))
+    else:
+        pass
+    
