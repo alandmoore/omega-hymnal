@@ -5,6 +5,7 @@ Database model for OMEGA HYMNAL.
 import sqlite3
 from .util import prep_lyrics, debug
 from itertools import chain
+import re
 
 class Database:
 
@@ -63,6 +64,8 @@ class Database:
 
     def get_songlist(self, *args, **kwargs):
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
+        for i,song in enumerate(songs):
+            songs[i]["first_page"] = re.sub("\{.*?\}", "", song["first_page"])
         return songs
 
     def get_categories(self, *args, **kwargs):
