@@ -35,15 +35,15 @@ function transpose_chord(chord, halfsteps){
 	//in case it's a slash chord, split it into top and bottom.
 	//since javascript regex lacks lookbehind, we'll do some ugly workarounds
 	chord = chord.replace(/<\//g, "<|");
-	console.log(chord);
+	//console.log(chord);
 	chord = chord.split(/(\/|-)/);
-	console.log(chord);
+	//console.log(chord);
 	for (c in chord){
 	    //restore the mangling we did during the split
 	    chord[c] = chord[c].replace(/<\|/g, "</");
 	    for (i = 0; i < Math.abs(halfsteps); i++){
 		var note = chord[c].match(/\s*([A-G](?:<sup>♯<\/sup>|<sup>♭<\/sup>)?)(.*)/);
-		console.log(chord[c] + " matches note: ", note);
+		//console.log(chord[c] + " matches note: ", note);
 		if (note){
 		    note = note[1];
 		    var new_note = notes[note][direction];

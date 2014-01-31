@@ -47,7 +47,6 @@ DIV.songpage
 NAV 
 { 
   background-color: slategray;
-  color: #111;
   border-bottom: solid 2px silver;
   box-shadow: inset 0px -10px 10px #AAC, 2px 2px 4px black;
   height: 2em;
@@ -58,6 +57,9 @@ NAV
   left: 0;
   z-index:100;
   width: 100%;
+  color: #EEE;
+  text-shadow: 0px 0px 5px black;
+  
  }
 
 NAV UL
@@ -106,12 +108,6 @@ NAV A
   text-shadow: 0px 0px 5px black;
  }
 
-NAV SPAN
-{ 
-  color: #EEE;
-  text-shadow: 0px 0px 5px black;
-  
- }
 NAV UL LI UL 
 { 
    display: none;

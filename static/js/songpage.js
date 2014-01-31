@@ -11,7 +11,7 @@ function fitDivToPage(div) {
     var line_size = target_height / numbreaks;
     var font_size = line_size;
     var has_chords = $(".chord").length > 0;
-    console.log("Has chords: ", has_chords);
+    //console.log("Has chords: ", has_chords);
     if (has_chords){
 	font_size = .65 * line_size;
     }
@@ -33,6 +33,7 @@ function fitDivToPage(div) {
 $(document).ready(function(){
     var page = 1;
     var numpages = $('.songpage').size();
+    document.original_chords = $(".chord").clone();
     document.listwindow = window.opener;
     document.transpose = 0;
     //page movment function
@@ -42,10 +43,15 @@ $(document).ready(function(){
 	$(div).stop().fadeIn(200);
 	$("#songtitle").html("<span>&quot;" + $(div).attr("data-songtitle") + "&quot;</span>");
 	$('#pagecounter').html("<span>Page " + pagenumber + " / " + numpages + "</span>");
+	if (document.transpose !== 0){
+	    var sign = (document.transpose > 0)?"♯":"♭";
+	    $("#transpose").html("Tr: " + sign + Math.abs(document.transpose));
+	}else{
+	    $("#transpose").html("Tr: ♮ ");
+	}
 	$(".chord").each(function(i, el){
-	    $(el).html(transpose_chord($(el).html(), document.transpose));
+	    $(el).html(transpose_chord(document.original_chords[i].innerHTML, document.transpose));
 	});
-	document.transpose = 0;
 	setTimeout( function(){fitDivToPage(div);}, 100);
     }
     
@@ -54,8 +60,8 @@ $(document).ready(function(){
 	//var firstpage = function(){move_to_page(1)};
 	//setTimeout('firstpage()', 500);
     $(document).keydown(function(e){
-	console.log(e);
-	console.log("keycode pressed:" + e.which);
+	//console.log(e);
+	//console.log("keycode pressed:" + e.which);
 	//Page forward
 	if (("page_forward_key" in window && e.which == parseInt(page_forward_key, 10) )
 	    || e.which == $.ui.keyCode.RIGHT){
@@ -78,10 +84,10 @@ $(document).ready(function(){
 	}
 	// Transpose chords
 	else if (e.which === 38){
-	    document.transpose = 1;
+	    document.transpose = (document.transpose + 1) % 12;
 	}
 	else if (e.which === 40){
-	    document.transpose = -1;
+	    document.transpose = (document.transpose -1) % 12;
 	}
 	move_to_page(page);
     });
@@ -103,7 +109,7 @@ $(document).ready(function(){
 	if (really){
 	    var formdata = $(this).closest("FORM").serialize();
 	    $.post("/post/delete", data=formdata, function(){
-		console.log(window.opener);
+		//console.log(window.opener);
 		document.listwindow.location.reload();
 		setTimeout(window.close, 500);
 	    });
