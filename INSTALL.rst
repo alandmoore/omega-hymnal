@@ -8,6 +8,10 @@ If this documentation is unclear, please post questions to Omega Hymnal's github
 Requirements
 ============
 
+Omega Hymnal should, in theory, run on any platform that can run Python; in practice, it's developed and tested on Linux (Arch and Debian), and not routinely tested on other platforms.
+
+It should also, in theory, work with any reasonably standards-compliant browser.  In practice, it's tested against the Chromium web browser and sometimes Firefox.  There are some known bugs in Firefox.
+
 Before you can run Omega Hymnal, you need to install the prerequisites, Python and Flask.
 
 Python
@@ -45,6 +49,7 @@ Setup
 - Open a web browser and point it to http://localhost:5000.  You'll see an error about the database file needing to be initialized, so just click "Initialize".
 
 - You should now find yourself looking at an empty Omega Hymnal reference.  You can click "New Song" to create your first song entries, or go to Tools->Import to import .omegahymnal files.  Sample import files are in the "songs" subdirectory.
+
 
 Advanced
 --------

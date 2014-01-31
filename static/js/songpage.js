@@ -34,6 +34,7 @@ $(document).ready(function(){
     var page = 1;
     var numpages = $('.songpage').size();
     document.listwindow = window.opener;
+    document.transpose = 0;
     //page movment function
     function move_to_page(pagenumber){
 	var div = "#page"+pagenumber;
@@ -41,6 +42,10 @@ $(document).ready(function(){
 	$(div).stop().fadeIn(200);
 	$("#songtitle").html("<span>&quot;" + $(div).attr("data-songtitle") + "&quot;</span>");
 	$('#pagecounter').html("<span>Page " + pagenumber + " / " + numpages + "</span>");
+	$(".chord").each(function(i, el){
+	    $(el).html(transpose_chord($(el).html(), document.transpose));
+	});
+	document.transpose = 0;
 	setTimeout( function(){fitDivToPage(div);}, 100);
     }
     
@@ -51,20 +56,32 @@ $(document).ready(function(){
     $(document).keydown(function(e){
 	console.log(e);
 	console.log("keycode pressed:" + e.which);
+	//Page forward
 	if (("page_forward_key" in window && e.which == parseInt(page_forward_key, 10) )
 	    || e.which == $.ui.keyCode.RIGHT){
 	    //forward page
 	    if (page < numpages){ page++;}
 	}
+	//Page backwards
 	else if (("page_backward_key" in window && e.which == parseInt(page_backward_key,10) )
 		 || e.which == $.ui.keyCode.LEFT){
 	    if (page > 1) page--;
 	}
+	//Go home
 	else if (e.which == $.ui.keyCode.BACKSPACE && e.shiftKey){
 	    $("#link_home").trigger("click");
-	}else if (e.which >= 49 && e.which <=57 && (e.which - 48) <= numpages){
+	}
+	// Go directly to a page
+	else if (e.which >= 49 && e.which <=57 && (e.which - 48) <= numpages){
 	    //if you hit 1-9, go to that page.
 	    page = e.which - 48;
+	}
+	// Transpose chords
+	else if (e.which === 38){
+	    document.transpose = 1;
+	}
+	else if (e.which === 40){
+	    document.transpose = -1;
 	}
 	move_to_page(page);
     });

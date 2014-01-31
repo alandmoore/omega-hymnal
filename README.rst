@@ -14,33 +14,7 @@ Omega Hymnal is free software released under the GNU GPL version 3.
 Installation
 ============
 
-There are many ways to install Omega Hymnal, depending on how you want to use it and your level of technical ability.  The simplest way is to run it locally and connect to it on the same system.
-
-Requirements
-------------
-
-- Python 3: http://www.python.org
-- Flask 0.1.0: http://flask.pocoo.org
-- Any modernish web-browser (Firefox/Chrome/Safari).  Not sure if IE will work.
-
-Installation
-------------
-
-- Install the required software
-- Download Omega Hymnal and unzip it to a folder
-- Run omegahymnal.py
-- Point your web browser to http://localhost:5000
-- You'll be prompted to initialize a database file.  Click "initialize".
-- If you want some initial songs to play with, go to Tools->Import.  You'll find an import file with songs in the "songs" folder.
-
-Advanced
---------
-
-If you want to run Omega Hymnal on a LAN for other computers to access, there are a couple of ways to do it:
-
-- You can edit omegahymnal.conf and uncomment the "HOST=0.0.0.0" line.  Then run Omega Hymnal.  Other computers on the network can then browse to http://host:port where "host" is the hostname or IP address of the computer and "port" is whatever port you configure (5000 by default).
-
-- You can also run Omega Hymnal behind a webserver like Apache just like any other WSGI application.  This takes a little more setup and fiddling; probably there's no need for this unless you're an advanced user.
+See the included INSTALL.rst file for information on how to install Omega Hymnal to your system.
 
 Usage
 =====
@@ -48,6 +22,17 @@ Usage
 Omega Hymnal is pretty simple to use.  Select a song from the list and it displays in a new browser tab on the screen.  The text size is meant to auto-adjust to the available screen width.
 
 By default the left and right arrow keys move you between pages of the song.  Shift+Backspace closes the song tab.  The spacebar can be used to "resize" the text if something goes bad, and you can hit a number from 1 to 9 to go directly to that page, if it exists.
+
+Transpose
+---------
+
+You can also transpose chords using the up-arrow and down-arrow keys on your keyboard.  This will attempt to transpose all the chords up or down (respectively) one half-step.  You can do this repeatedly until you get to the key you want.  Transposition is temporary and only lasts while you have the song's tab open.
+
+The transpose isn't terribly smart about key signature and doing proper flats or sharps; it will basically do sharps if you go up, and flats if you go down.  It won't do things like double sharps, double flats, or accidentals that refer to regular notes (e.g., it won't do "C flat", it'll just do "B").  It works pretty well for moving simple songs between "natural" keys, though; I don't know many people who want to play in G flat, anyway.
+
+If the transpose gets out of whack and you want to go back to the original chords, just refresh the page.
+
+If you intend to use the transpose feature, follow the guidelines below for writing compatible chords.
 
 Editing Songs
 -------------
@@ -70,6 +55,17 @@ The following substitutions are made when the chords are displayed:
 - The pound sign "#" becomes a sharp symbol
 - The lower-case 'b' becomes a flat symbol
 
+If you want transpose to work reliably, you need to follow these guidelines:
+
+- Don't put anything that isn't a chord in the curly braces.
+- Don't use "-" for "minor".  Just use a lowercase "m", or "min", because...
+- If you need to have a sequence of chords together, separate each chord with a "-" (and spaces, if you like), like so::
+
+    {D - A/C#}All our {Bm}sins and griefs to {A - Asus4 - A}bear.
+
+- Use capitol letters A through G for the note names.  Use only flat (b) or sharp (#) as accidentals.
+- Don't put HTML tags in your chords.  I don't think this works anyway.
+
 
 Contributing
 ============
@@ -78,6 +74,8 @@ Bugs
 ----
 
 There are probably lots of bugs in Omega Hymnal.  Please report them to the project's GitHub page.
+
+Be aware that Omega Hymnal is developed and tested on Linux (Arch and Debian) and not routinely tested on Windows or OSX.
 
 
 Feature Requests
@@ -101,7 +99,7 @@ Songs must meet these requirements:
 - Include authors when available.  Include keywords too.  Keywords are words a person might associate with the song that aren't part of the title but you'd want to search on.  For example, "The First Noel" might have keywords "christmas angels shepherds star nativity".  Include a category only if it's obvious (e.g. Christmas, Easter, or Children).
 - I've included Christian hymns so far, but nonreligious songs or songs from other faith traditions are also fine; if any are submitted I will probably split these out into multiple files organized by faith.  I reserve the right not to include offensive or objectionable songs.
 - Until I have a way to vet non-English songs for copyright or content problems, I'm going to have to accept only English songs.  I'm open to discussion on this if you have a solution to the potential problems it poses.
-- Try to include chords if possible.  Please keep them simple and reasonably "campfire guitarist" friendly (I know, I love jazz too, but...).
+- Try to include chords if possible.  Please keep them simple and reasonably "campfire guitarist" friendly (I know, I love jazz too, but...).  Make sure they work reliably with the transpose feature.
 
 
 If you intend to do a large contribution of songs, please discuss it with me first so we can set some standards and avoid a lot of wasted or duplicated effort.
