@@ -1,31 +1,32 @@
 //Functions for the omega hymnal song page
 
 function fitDivToPage(div) {
-    var page_width = window.innerWidth;
-    var page_height =  window.innerHeight - $("NAV").outerHeight();
+    var target_height =  window.innerHeight - $("NAV").outerHeight();
     var numbreaks = $(div +" > br").size() +1;
-    //the proper size according to height
-    var target_width = $(div).innerWidth();
-    //var target_width = page_width;
-    var target_height = page_height;
+    var target_width = window.innerWidth * .95;
     var line_size = target_height / numbreaks;
     var font_size = line_size;
-    var has_chords = $(".chord").length > 0;
+    var has_chords = $(div).find(".chord").length > 0;
     //console.log("Has chords: ", has_chords);
     if (has_chords){
 	font_size = .65 * line_size;
+	$(div).css("padding-top", "1em");
+	$(div).css("padding-bottom", "1em");
     }
+    $(div).css("line-height", line_size+"px");
     $(div).css("white-space", "nowrap");
     $(div).css("font-size", font_size+"px");
-    //console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+    console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+    //The basic concept here is to shrink the text by 10% until the scrollwidth is less than the target width, and scrollheight likewise.  
+    //This would indicate a lack of scrollbars.
     while (($(div)[0].scrollWidth > target_width || $(div)[0].scrollHeight > target_height) && font_size > 12){
 	//	console.log(font_size);
 	font_size *= .9;
 	$(div).css("font-size", font_size+"px");
  
-    //console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+	console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div scroll W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     }
-    $(div).css("line-height", line_size+"px");
+    $(div).width($(div)[0].scrollWidth);
     $(".chord").css("bottom", (line_size * .3)+"px");
 }
 
@@ -52,7 +53,7 @@ $(document).ready(function(){
 	$(".chord").each(function(i, el){
 	    $(el).html(transpose_chord(document.original_chords[i].innerHTML, document.transpose));
 	});
-	setTimeout( function(){fitDivToPage(div);}, 100);
+	setTimeout( function(){fitDivToPage(div);}, 50);
     }
     
     if (numpages > 0){

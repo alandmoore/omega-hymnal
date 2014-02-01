@@ -144,7 +144,7 @@ NAV UL LI UL LI:hover
    font-size: .5em;
    color: #DDD;
    clear: both;
-   text-align: center;
+   text-align: center;)
    width: 100%;
    margin: 0;
 }
@@ -152,7 +152,8 @@ NAV UL LI UL LI:hover
 #content
 { 
   padding: 0;
-  text-align: left;
+  text-align: center;
+   vertical-align: middle;
    width: 100%;
    margin: 0;
 }
@@ -305,6 +306,9 @@ DIV.songpage
    width: auto;
    margin-left: auto;
    margin-right: auto;
+   padding: 0;
+   text-align: left;
+   overflow: visible;
 }
 
 SPAN.songline
@@ -318,8 +322,8 @@ SPAN.chord
   position: absolute;
   z-index: 99;
   font-size: .5em;
-  width: 0;
-  overflow: show;
+  overflow: visible;
+  
  }
 
 
