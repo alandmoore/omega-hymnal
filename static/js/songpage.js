@@ -16,7 +16,7 @@ function fitDivToPage(div) {
     $(div).css("line-height", line_size+"px");
     $(div).css("white-space", "nowrap");
     $(div).css("font-size", font_size+"px");
-    console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+    //console.log("Area WxH: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     //The basic concept here is to shrink the text by 10% until the scrollwidth is less than the target width, and scrollheight likewise.  
     //This would indicate a lack of scrollbars.
     while (($(div)[0].scrollWidth > target_width || $(div)[0].scrollHeight > target_height) && font_size > 12){
@@ -24,7 +24,7 @@ function fitDivToPage(div) {
 	font_size *= .9;
 	$(div).css("font-size", font_size+"px");
  
-	console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div scroll W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
+	//console.log("fontsize: ", font_size, "; Line height: ", line_size, "; Div target W,H: ", target_width, target_height, "; Div scroll W, H: ", $(div)[0].scrollWidth, $(div)[0].scrollHeight);
     }
     $(div).width($(div)[0].scrollWidth);
     $(".chord").css("bottom", (line_size * .3)+"px");
@@ -63,6 +63,10 @@ $(document).ready(function(){
     $(document).keydown(function(e){
 	//console.log(e);
 	//console.log("keycode pressed:" + e.which);
+	//If we have an input in focus, we don't need to do any of these.
+	if ($(":input:focus").length > 0){
+	    return true;
+	}
 	//Page forward
 	if (("page_forward_key" in window && e.which == parseInt(page_forward_key, 10) )
 	    || e.which == $.ui.keyCode.RIGHT){
