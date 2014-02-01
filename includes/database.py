@@ -65,7 +65,7 @@ class Database:
     def get_songlist(self, *args, **kwargs):
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
         for i,song in enumerate(songs):
-            songs[i]["first_page"] = re.sub("\{.*?\}", "", song["first_page"])
+            songs[i]["first_page"] = re.sub("\{.*?\}", "", song["first_page"] or '')
         return songs
 
     def get_categories(self, *args, **kwargs):
