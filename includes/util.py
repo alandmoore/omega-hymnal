@@ -16,7 +16,7 @@ def prep_lyrics(lyrics):
     chord_regex = re.compile("(\{.*?\})")
 
     # Insert Breaks at newlines and wrap each line in a span
-    lines = ["<span class='songline'>{}</span><br />".format(line) for line in lyrics.split("\n")]
+    lines = [u"<span class='songline'>{}</span><br />".format(line) for line in lyrics.split("\n")]
     lyrics = "\n".join(lines)
 
 
