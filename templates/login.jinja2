@@ -1,0 +1,8 @@
+<form name='loginform' id='loginform' action='{{url_for('login')}}' method='POST'>
+<p class='error'>{{message}}</p>
+<ul>
+<li><label>Username: </label> <input name='username' type='text' /></li>
+<li><label>Password: </label> <input type='password' name='password' /></li>
+<li><input type='submit' value='Login' /></li>
+</ul>
+</form>

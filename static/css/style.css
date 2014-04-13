@@ -20,7 +20,8 @@ A:hover
   font-style: italic;
  }
 
-input[type=text]
+input[type=text],
+input[type=password]
 { 
   min-width: 30em;
  }

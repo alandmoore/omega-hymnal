@@ -17,7 +17,7 @@ and your favorite standards-compliant web browser.
 """
 
 
-from flask import Flask, g, render_template, request, json,  abort, Response, redirect
+from flask import Flask, g, render_template, request, json,  abort, Response, redirect, session
 from includes.database import Database
 from includes.util import debug
 import zlib
@@ -36,7 +36,13 @@ def before_request():
         g.db_corrupt = False
         settings = g.db.get_settings()
         categories = g.db.get_categories()
-        g.std_args = {"settings" : settings, "categories" : categories}
+        g.accounts = app.config.get("RW_ACCOUNTS")
+        if not g.accounts:
+            session["auth"] = True
+            g.secured = False
+        else:
+            g.secured = True
+        g.std_args = {"settings" : settings, "categories" : categories, "session" : session, "secured" : g.secured}
 
 @app.route("/")
 def index():
@@ -89,8 +95,28 @@ def settings():
 def initialize_database():
     return render_template("initialize_form.jinja2", filename=app.config['DATABASE_FILE'], **g.std_args)
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.jinja2", message='', **g.std_args)
+    elif request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if username in g.accounts.keys() and password == g.accounts[username]:
+            session["auth"] = True
+            return "Login Correct"
+        else:
+            return render_template("login.jinja2", message='Login incorrect', **g.std_args)
+
+@app.route("/logout")
+def logout():
+    session["auth"] = False
+    return "You are logged out."
+        
 @app.route("/post/<callback>", methods=["POST"])
 def post(callback):
+    if g.accounts and not session.get("auth"):
+        abort(403)
     callbacks = {
         "song" : g.db.save_posted_song,
         "delete" : g.db.delete_song,

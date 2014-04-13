@@ -296,4 +296,26 @@ $(document).ready(function(){
 	})
 	return false
     });
+    
+    // LOGIN/LOGOUT
+    $(document).on("click", "#link_login", function(event){
+	$.get("/login", function(data){
+	    show_popup_form(data);
+	    $("#loginform").on("submit", function( event ){
+		event.preventDefault();
+		$.post("/login", $(this).serialize(), function(data){
+		    show_popup_form(data);
+		    window.location.reload();
+		});
+		return false;
+	    });
+	});
+    });
+
+    $(document).on("click", "#link_logout", function(event){
+	$.get("/logout", function(data){
+	    //show_popup_form(data);
+	    window.location.reload();
+	});
+    });
 });

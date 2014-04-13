@@ -1,15 +1,27 @@
 <nav>
 <ul id='nav_left'>
 <li id="link_home"><a href='{{url_for("index")}}' >Home</a></li>
+{% if session["auth"] %}
 <li id="new_song"><a href="#">New song</a><li>
+{% endif %}
 </ul>
 <ul id='nav_right'>
 <li id="link_tools"><a href="#">Tools</a>
 <ul>
+{% if session["auth"] %}
   <li id="link_import"><a href="#">Import</a></li>
   <li id="link_export"><a href="#">Export</a></li>
   <li id="link_settings"><a href="#">Settings</a></li>
   <li id="link_initialize"><a href="#">Initialize Database</a></li>
+{% if secured %}
+  <li id="link_logout"><a href="#">Logout</a></li>
+{% endif %}
+{% else %}
+  <li id="link_export"><a href="#">Export</a></li>
+  {% if secured %}
+  <li id="link_login"><a href="#">Login</a></li>
+  {% endif %}
+{% endif %}
 </ul>
 
 </li>

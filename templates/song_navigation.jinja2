@@ -1,7 +1,9 @@
 <nav>
 <ul id="nav_left">
 <li id="link_home"><a href="{{url_for("index")}}">Home</a></li>
+{% if session["auth"] %}
 <li id="edit_song"><a href="#">Edit</a></li>
+{% endif %}
 </ul>
 <div id="songtitle"></div>
 <ul id="nav_right">
