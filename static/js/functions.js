@@ -46,6 +46,20 @@ function show_popup_form(data){
     $("#_dialog_").html(data).dialog(default_dialog_options);
 }
 
+function apply_filters(){
+    $(".songlink").hide();
+    var category = $("#category_select").val();
+    var show_with_music_only = $("#with_music_checkbox").is(":checked");
+    if (category === ''){
+	$(".songlink").show();
+    }else{
+	$(".songlink[data-category=\"" + category + "\"]").show();
+    }
+    if (show_with_music_only){
+	$(".songlink:visible:not(:contains(♫))").hide();
+    }
+}
+
 $(document).ready(function(){
         //even out the navigation
     //setTimeout(function(){
@@ -67,16 +81,28 @@ $(document).ready(function(){
     });
     //category filter
     $("#category_select").change(function(){
-	var category = $(this).val();
-	console.log(category);
-	if (category === ""){
-	    $(".songlink").show();
-	}else{
-	$(".songlink").hide();
-	$(".songlink[data-category=\"" + category + "\"]").show();
-	}
+	// var category = $(this).val();
+	// console.log(category);
+	// if (category === ""){
+	//     $(".songlink").show();
+	// }else{
+	// $(".songlink").hide();
+	// $(".songlink[data-category=\"" + category + "\"]").show();
+	// }
+	apply_filters();
     });
-    
+    apply_filters();
+
+    //Music filter
+    $("#with_music_checkbox").change(function(){
+	apply_filters();
+    });
+
+    //some jquery-ui magic
+    $("#with_music_checkbox").button();
+    $("#randomize_list").button();
+    $("#category_select").addClass("ui-widget");
+
     //make the main page LI's clickable
     $("#songlist > LI").click(function(){
 	var href = $(this).attr("data-href");

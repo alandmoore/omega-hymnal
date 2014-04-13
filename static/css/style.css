@@ -166,6 +166,12 @@ NAV UL LI UL LI:hover
    width: 100%;
 }
 
+#category_select
+{
+   padding: .3em 1em;
+   border-radius: 4px;
+}
+
 /************/
 /* Songlist */
 /************/
