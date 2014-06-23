@@ -19,7 +19,7 @@ Python
 
 Python 3.x preferred; 2.x may work, though you can probably expect bugs if your version is older than 2.6.
 
-Please see http://www.python.org/getit/ for instructions on installing Python on your operating system.  Linux and OSX users should be aware that Python is probably already installed on your system; make sure it's a new enough version, though.
+Please see http://www.python.org/download/ for instructions on installing Python on your operating system.  Linux and OSX users should be aware that Python is probably already installed on your system; make sure it's a new enough version, though.
 
 Flask
 -----
@@ -43,6 +43,10 @@ Setup
     git clone http://github.com/alandmoore/omega-hymnal
 
 - The user who will be running Omega Hymnal needs read/write access to the database file and the directory it's in.  If this isn't the case, edit the omegahymnal.conf file and point the database file location to somewhere where the user can read/write.
+
+- Also, you'll want to edit the omegahymnal.conf file and set one or more user/password combination for read/write by editing the following line (or commenting it out with a "#" if you don't need security)::
+
+    RW_ACCOUNTS = {"username" : "password"}
 
 - Launch omegahymnal.py with Python.
 
@@ -80,7 +84,7 @@ The following demonstrates one possible setup on a server running Debian.  Run t
     sed -i 's/#HOST/HOST/' omega-hymnal/omegahymnal.conf
 
     # exit back to root
-    
+
     exit
 
     # Add a line to /etc/rc.local to run the script at boot
@@ -102,4 +106,3 @@ Running with a Python virtual environment
 If your OS doesn't have the latest version of Flask easily available, you can set up a Python virtual environment and get the latest Flask using pip.  This is the recommended way to run Flask, but it requires a bit of extra setup and effort and may not be entirely necessary for Omega Hymnal, but if you're using (for example) a Linux like Debian or CentOS with conservative release cycles, the repository version of Flask may not be new enough.
 
 You can learn more about Python virtual environments at http://www.virtualenv.org/en/latest/.
-
