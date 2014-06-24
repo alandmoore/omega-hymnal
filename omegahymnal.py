@@ -27,6 +27,7 @@ app = Flask(__name__)
 
 @app.before_request
 def before_request():
+    """Set up various things when a request is made."""
     g.debug = app.config.get("DEBUG")
     g.db = Database(app.config.get("DATABASE_FILE"))
     g.missing_tables = g.db.get_missing_tables()
@@ -46,6 +47,7 @@ def before_request():
 
 @app.route("/")
 def index():
+    """Return the landing page."""
     if g.db_corrupt:
         return render_template("corrupt.jinja2", missing=g.missing_tables, filename=app.config.get("DATABASE_FILE"))
     else:
@@ -54,16 +56,23 @@ def index():
 
 @app.route("/song/<id>")
 def song(id):
+    """Return the song page of song <id>."""
     song = g.db.get_song(int(id))
     return render_template("song.jinja2", song=song, **g.std_args)
 
 @app.route("/edit_song/<id>")
 def edit_song(id):
+    """Return the editing form for song <id>"""
     song = g.db.get_song(int(id))
     return render_template("edit_form.jinja2", song=song, **g.std_args)
 
 @app.route("/export", methods=["GET", "POST"])
 def export():
+    """Return either the export form or the export file itself.
+
+    A GET request will return the form.
+    A POST request will return the export file.
+    """
     if request.method == "GET":
         return render_template("export_form.jinja2", **g.std_args)
     else: #perform an export
@@ -75,6 +84,10 @@ def export():
 
 @app.route("/import", methods=["GET", "POST"])
 def import_songs():
+    """Return either the import form or import the import file and return the result.
+    A GET request will return the form.
+    A POST request will import the posted file and return results.
+    """
     if request.method == "GET":
         return render_template("import_form.jinja2", **g.std_args)
     else:
@@ -89,14 +102,21 @@ def import_songs():
         
 @app.route("/settings")
 def settings():
+    """Return the settings form."""
     return render_template("settings.jinja2", **g.std_args)
 
 @app.route("/initialize")
 def initialize_database():
+    """Return the initialization page."""
     return render_template("initialize_form.jinja2", filename=app.config['DATABASE_FILE'], **g.std_args)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Return the login form or else login.
+
+    A GET request will return the form.
+    A POST request will process the login.
+    """
     if request.method == "GET":
         return render_template("login.jinja2", message='', **g.std_args)
     elif request.method == "POST":
@@ -110,11 +130,13 @@ def login():
 
 @app.route("/logout")
 def logout():
+    """Log out the user by deleting the session."""
     session["auth"] = False
     return "You are logged out."
         
 @app.route("/post/<callback>", methods=["POST"])
 def post(callback):
+    """Process a POST request according to the specified <callback> method."""
     if g.accounts and not session.get("auth"):
         abort(403)
     callbacks = {
@@ -134,6 +156,7 @@ def post(callback):
 
 @app.route("/json/<callback>")
 def json_get(callback):
+    """Return JSON data according to the specified <callback>"""
     callbacks = {
         "categories" : g.db.get_categories,
         "names"  : g.db.get_names,

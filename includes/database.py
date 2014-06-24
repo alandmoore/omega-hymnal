@@ -9,23 +9,44 @@ import re
 
 class Database:
 
+    """The database model
+    
+    This defines all methods for accessing data in the data file.
+    """
+
     def __init__(self, dbfile):
+        """Construct a database instance."""
         self.dbfile = dbfile
         self.cx_obj = None
         self.cu_obj = None
 
     def cx(self):
+        """Return a connection object to the database.
+        
+        Use this method in place of the connection object to ensure a valid connection.
+        """
         if not self.cx_obj:
             self.cx_obj = sqlite3.connect(self.dbfile)
             self.cx_obj.row_factory = sqlite3.Row
         return self.cx_obj
 
     def cu(self):
+        """Return a cursor object for the current connection.
+    
+        Use this method in place of a cursor object to ensure a valid cursor.
+        """
         if not self.cu_obj:
             self.cu_obj = self.cx().cursor()
         return self.cu_obj
 
     def query(self, query, data=None, return_results=True):
+        """Run a query and return the results.
+        
+        Arguments:
+          query -- The query to run.
+          data -- a dictionary or iterable containing parameter data for the query
+          return_results -- Whether or not results should be returned.  Implies a "SELECT" statement, basically.
+        """
         if data is None:
             self.cu().execute(query)
         else:
@@ -38,19 +59,22 @@ class Database:
             return None
 
     def initialize(self):
-        """
-        Creates a fresh, empty database.
-        """
+        """Create a fresh, empty database."""
         with open("sql/schema.sql", 'r') as sqlfile:
             self.cu().executescript(sqlfile.read())
 
     def do_initialize_db(self, formdata, *args, **kwargs):
+        """Check confirmation before initializing the database."""
         confirm = formdata.get("init_db")
         if confirm:
             self.initialize()
         return ''
 
     def get_missing_tables(self):
+        """Check the database for any missing tables. 
+
+        Return a list of missing tables, if any.
+        """
         query = """SELECT name FROM sqlite_master WHERE type='table'"""
         are_tables = [x.get("name") for x in self.query(query)]
         debug("Tables that exist: " + are_tables.__str__())
@@ -63,18 +87,30 @@ class Database:
     ###########
 
     def get_songlist(self, *args, **kwargs):
+        """Return a list of information about the songs in the database
+        
+        Used for building the main song list.
+        """
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
         for i,song in enumerate(songs):
             songs[i]["first_page"] = re.sub("\{.*?\}", "", song["first_page"] or '')
         return songs
 
     def get_categories(self, *args, **kwargs):
+        """Return a list of the song categories.
+        
+        if keyword argument "term" is provided, return only those that match the term.
+        """
         term = kwargs.get("term", '') + '%'
         categories = self.query("SELECT DISTINCT category FROM songs WHERE category like ? ORDER BY category", (term,))
         categories = [x["category"] for x in categories]
         return categories
 
     def get_names(self, *args, **kwargs):
+        """Return a list of song names.
+
+        If keyword argument "term" is provided, return only those that match the term.
+        """
         debug(kwargs)
         term = kwargs.get("term", '') + "%"
         names = self.query("SELECT DISTINCT name FROM songs WHERE name like ? ORDER BY name", (term,))
@@ -82,6 +118,7 @@ class Database:
         return names
 
     def get_song(self, id, *args, **kwargs):
+        """Return all information about a song."""
         song = self.query("""SELECT * FROM songs WHERE id=?""", (id,))
         if not song:
             return {}
@@ -95,6 +132,10 @@ class Database:
 
     
     def get_export_song_ids(self, formdata=None, *args, **kwargs):
+        """Return a list of ids and names of songs to be exported.
+
+        Takes the export form data and matches songs against those parameters.
+        """
         if formdata is None:
             formdata = kwargs
         export_type = formdata.get("type")
@@ -110,7 +151,7 @@ class Database:
             query = "SELECT id,name FROM songs WHERE keywords like :keywords"
         elif export_type == "author":
             qdata = {"authors" : "%{}%".format(formdata.get("authors"))}
-            query = "SELECT id,name FROM songs WHERE authors like :authors"
+            query = "SELECT id,name FROM songs WHERE authors like :authors" 
         else:  #Default to "all"
             qdata = {}
             query = "SELECT id,name FROM songs"
@@ -122,6 +163,7 @@ class Database:
         return idlist
 
     def export_songs(self, formdata, *args, **kwargs):
+        """Return all data about songs matching export form data. """
         idlist = self.get_export_song_ids(formdata)
         export = []
         for song_id in idlist.keys():
@@ -129,6 +171,7 @@ class Database:
         return export
             
     def get_settings(self):
+        """Return all settings stored in the database."""
         settings = self.query("SELECT * FROM settings ORDER BY setting_name")
         settings = dict([(x["setting_name"], x["setting_value"]) for x in settings])
         return settings
@@ -140,6 +183,11 @@ class Database:
     ###########
 
     def save_posted_song(self, formdata):
+        """Prepare POSTed song data and save it to the database.
+        
+        This is for a song received from http POST.  If an "id" is present,
+        it will try to update a song with that id.
+        """
         new_record = formdata.get("id") == 'None'
         pages = [p for p in formdata.getlist("page") if p]
         formdata = dict([(key,  value) for key, value in formdata.items()])
@@ -147,6 +195,7 @@ class Database:
         return self.save_song(formdata, new_record)
 
     def save_imported_song(self, formdata):
+        """Prepare song data from an import file and save it to the database."""
         new_record = True
         pages = []
         for page in sorted(formdata.get("pages"), key= lambda k: k["page_number"]):
@@ -155,6 +204,7 @@ class Database:
         return self.save_song(formdata, new_record)
 
     def save_song(self, formdata, new_record=True):
+        """Actually write prepped song data to the database."""
         qdata = {
             "name" : formdata.get("name"),
             "authors" : formdata.get("authors"),
@@ -191,6 +241,7 @@ class Database:
         return song_id.__str__()
 
     def delete_song(self, formdata):
+        """Delete a song from the database, as defined by <id>."""
         song_id = int(formdata.get("id"))
         query = "DELETE FROM pages WHERE song_id=?"
         self.query(query, (song_id,), False)
@@ -200,6 +251,7 @@ class Database:
         return ""
 
     def save_settings(self, formdata):
+        """Write POSTed settings data to the database."""
         query = """INSERT OR REPLACE INTO settings(setting_name, setting_value) VALUES(?, ?)"""
         for key, value in formdata.items():
             self.query(query, (key, value), False)

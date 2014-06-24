@@ -7,6 +7,7 @@ from flask import g
 
 
 def prep_lyrics(lyrics):
+    """Convert markup-format lyrics to HTML."""
     chord_replacements = [
     ("{", "<span class=chord>"),
     ("}", "</span>"),
@@ -31,11 +32,13 @@ def prep_lyrics(lyrics):
     return lyrics
 
 def remove_chords(lyrics):
+    """Remove chords from a page of lyrics."""
     chord_regex = re.compile("(\{.*?\})")
     lyrics = chord_regex.sub('', lyrics)
     return lyrics
 
 def debug(*messages):
+    """Log a message or messages to stderr if debugging is enabled."""
     if g.debug:
         sys.stderr.write("\n".join([m.__str__() for m in messages]))
     else:
