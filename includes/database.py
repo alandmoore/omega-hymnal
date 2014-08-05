@@ -120,9 +120,11 @@ class Database:
         """
         term = kwargs.get("term", '') + '%'
         categories = self.query(
-            """SELECT DISTINCT category"""
-            """FROM songs WHERE category like ? """
-            """ORDER BY category""", (term,))
+            """SELECT DISTINCT category
+            FROM songs WHERE category like ?
+            ORDER BY category""", 
+            (term,)
+        )
         categories = [x["category"] for x in categories]
         return categories
 
