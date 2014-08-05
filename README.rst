@@ -66,6 +66,42 @@ If you want transpose to work reliably, you need to follow these guidelines:
 - Use capitol letters A through G for the note names.  Use only flat (b) or sharp (#) as accidentals.
 - Don't put HTML tags in your chords.  I don't think this works anyway.
 
+Settings
+--------
+
+The "Settings" dialog in the "Tools" menu allows you to configure various aspects of Omega Hymnal:
+
+- Forward/Backward keycodes.  These are keycodes for the keys that will make pages go forward or backwards.  No idea what those keycodes are?  No problem, just focus the input field and type the key; the correct keycode will show up.
+
+- Show author: Toggle showing the author on the song page.  Some people find this distracting or inappropriate.  Others may be in situations where it's legally required.
+
+- Match author on song search: Whether or not author names should be matched when filtering songs in the list.
+
+- Match category on song search: Whether or not category names should be matched when filtering songs in the list.
+
+- Colors:  Set the colors for lyrics background, lyrics text, and chord text.  Check the "Default" box to just use Omega hymnal defaults.
+
+
+Security
+--------
+
+If you want to lock down editing, settings, import of songs, and database initialization from the Tools menu, you can specify the RW_ACCOUNTS variable in the omegahymnal.conf file.  
+
+RW_ACCOUNTS is a dict, where each item is in the form::
+    
+    "username" : "password"
+
+No, this isn't high security, but it will keep the kids from accidentally wiping out your song database.
+
+Import and Export
+-----------------
+
+Songs can be exported from and imported into Omega Hymnal from the "Tools" menu.  The file format is basically a gzipped JSON dump of the song data.
+
+The Export dialog allows you to apply various criteria for songs that will be exported, in case you want to just export part of your database.  As you define your criteria, a list of matching songs will show on the right side of the dialog.
+
+The Import routine will simply import an entire .omegahymnal file.  There's currently no way to import part of a file.  The imported songs will be added to the database, but should not ever overwrite existing songs (even if they have the same name, lyrics, etc).
+
 
 Contributing
 ============

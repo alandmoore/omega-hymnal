@@ -26,7 +26,9 @@ Flask
 
 Flask 0.1.0 or higher recommended.
 
-Please see instructions at http://flask.pocoo.org/docs/installation/ for installing flask on your operating system.  Many Linux distributions also provide flask via the package management system, but make sure the version matches the recommendation above.  If it's older, you can try installing Flask using pip or easy_install.
+Please see instructions at http://flask.pocoo.org/docs/installation/ for installing flask on your operating system.  Many Linux distributions also provide flask via the package management system, but make sure the version matches the recommendation above.  If it's older, you can try installing Flask using pip::
+
+    pip install flask
 
 
 Optional: SQLite3
