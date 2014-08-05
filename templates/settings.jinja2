@@ -24,6 +24,43 @@
       {% endfor %}
 </select></li>
 
+<li><label>Lyrics Background Color</label>
+  <input name=bg_color type='color' value="{{settings.get("bg_color")}}" />
+    <label for=bg_color_def>Default
+      <input type=checkbox 
+	     name='bg_color' 
+	     value='' 
+	     class='color_default' 
+	     id="bg_color_def" 
+	     {% if settings.get("bg_color") in (None, '') %}checked{% endif %}
+	     />
+    </label>
+</li>
+<li><label>Lyrics Text Color</label>
+  <input name=fg_color type='color' value="{{settings.get("fg_color")}}" />
+    <label for=fg_color_def>Default
+      <input type=checkbox 
+	     name='fg_color' 
+	     value='' 
+	     class='color_default' 
+	     id="fg_color_def" 
+	     {% if settings.get("fg_color") in (None, '') %}checked{% endif %}
+	     />
+    </label>
+</li>
+<li><label>Chords Text Color</label>
+  <input name=ch_color type='color' value="{{settings.get("ch_color")}}" />
+    <label for=ch_color_def>Default
+      <input type=checkbox 
+	     name='ch_color' 
+	     value='' 
+	     class='color_default' 
+	     id="ch_color_def" 
+	     {% if settings.get("ch_color") in (None, '') %}checked{% endif %}
+	     />
+    </label>
+</li>
+
 <li><input type='submit' value='Save' /></li>
 </ul>
 </form>

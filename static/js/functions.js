@@ -41,9 +41,12 @@ var default_dialog_options = {
     modal : true
 }
 
-function show_popup_form(data){
+function show_popup_form(data, onfinish){
     default_dialog_options.title = $(data).attr("title");
     $("#_dialog_").html(data).dialog(default_dialog_options);
+    if(onfinish){
+	onfinish();
+    }
 }
 
 function apply_filters(){
@@ -66,7 +69,20 @@ $(document).ready(function(){
 //	var navitems = $("NAV > UL > LI");
 //	navitems.css("width", Math.floor((window.innerWidth/navitems.size()) * .95));
   //  }, 200);
+    
+    //apply custom colors
 
+    if (bg_color){
+	$(document).find("BODY").css({"background-color" : bg_color});
+    }
+    if (fg_color){
+	$(document).find("#content").css({"color": fg_color});
+    }
+    if (ch_color){
+	$(document).find(".chord").css({"color": ch_color});
+    }
+
+    
     $("#search").focus();
     $("#search").keyup(function(){
 	var term = $(this).val();
@@ -245,7 +261,7 @@ $(document).ready(function(){
     //Show the settings dialog
     $(document).on("click", "#link_settings", function(event){
 	$.get("/settings", function(data){
-	    show_popup_form(data);
+	    show_popup_form(data, check_color);
 	});
     });
     //the "page forward key" and "page backward key" fields need to hold a keycode, not a character
@@ -254,6 +270,19 @@ $(document).ready(function(){
 	e.preventDefault();
 	return false;
     });
+
+    //Color default checkboxes should disable the color selects
+    function check_color(){
+	$("input[type=checkbox].color_default").each(function(i, el){
+	    var name = $(el).attr("name");
+	    if ($(el).is(":checked")){
+		$("input[type=color][name="+name+"]").attr("disabled", true);
+	    }else{
+		$("input[type=color][name="+name+"]").removeAttr("disabled");
+	    }
+	});
+    }
+    $(document).on("change", "input.color_default", check_color);
 
     //submit settings
     $(document).on("submit", "#settings_form", function(e){
