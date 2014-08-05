@@ -90,7 +90,7 @@ class Database:
         """
         query = """SELECT name FROM sqlite_master WHERE type='table'"""
         are_tables = [x.get("name") for x in self.query(query)]
-        debug("Tables that exist: " + are_tables.__str__())
+        debug("Tables that exist: " + str(are_tables))
         should_be_tables = ["settings", "songs", "pages"]
         missing = [table for table in should_be_tables
                    if table not in are_tables]
@@ -310,7 +310,7 @@ class Database:
             WHERE song_id=:song_id and page_number > :num_pages""",
             {"song_id": song_id, "num_pages": num_pages}, False)
 
-        return song_id.__str__()
+        return str(songid)
 
     def delete_song(self, formdata):
         """Delete a song from the database, as defined by <id>.
