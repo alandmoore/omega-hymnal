@@ -16,7 +16,11 @@ class Database:
     """
 
     def __init__(self, dbfile):
-        """Construct a database instance."""
+        """Construct a database instance.
+
+        Arguments:
+          dbfile -- A path to sqlite3 file.  It need not actually exist.
+        """
         self.dbfile = dbfile
         self.cx_obj = None
         self.cu_obj = None
@@ -46,7 +50,7 @@ class Database:
 
         Arguments:
           query -- The query to run.
-          data -- a dict / iterable containing parameter data for the query
+          data -- a dict or iterable containing parameter data for the query
           return_results -- Whether or not results should be returned.
                             Implies a "SELECT" statement, basically.
         """
@@ -67,7 +71,13 @@ class Database:
             self.cu().executescript(sqlfile.read())
 
     def do_initialize_db(self, formdata, *args, **kwargs):
-        """Check confirmation before initializing the database."""
+        """Check confirmation before initializing the database.
+        
+        Arguments:
+          formdata -- a dict or hashable containing submitted form data.
+        *args and **kwargs are thrown away, they're there to consume 
+        any extra args sent by the controller.
+        """
         confirm = formdata.get("init_db")
         if confirm:
             self.initialize()
@@ -93,7 +103,8 @@ class Database:
     def get_songlist(self, *args, **kwargs):
         """Return a list of information about the songs in the database
 
-        Used for building the main song list.
+        Used for building the main song list.  *args and **kwargs are not
+        used, but consume extra args from the controller.
         """
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
         for i, song in enumerate(songs):
@@ -104,8 +115,8 @@ class Database:
     def get_categories(self, *args, **kwargs):
         """Return a list of the song categories.
 
-        if keyword argument "term" is provided,
-        return only those that match the term.
+        Keyword Arguments:
+          term -- string to match categories against
         """
         term = kwargs.get("term", '') + '%'
         categories = self.query(
@@ -118,8 +129,8 @@ class Database:
     def get_names(self, *args, **kwargs):
         """Return a list of song names.
 
-        If keyword argument "term" is provided,
-        return only those that match the term.
+        Keyword Arguments:
+          term -- string to match names against
         """
         debug(kwargs)
         term = kwargs.get("term", '') + "%"
@@ -131,7 +142,13 @@ class Database:
         return names
 
     def get_song(self, id, *args, **kwargs):
-        """Return all information about a song."""
+        """Return all information about a song.
+
+        Arguments:
+          id -- song id (integer)
+        *args and **kwargs aren't used, they just consume extra args
+        from the controller.
+        """
         song = self.query("""SELECT * FROM songs WHERE id=?""", (id,))
         if not song:
             return {}
@@ -150,6 +167,8 @@ class Database:
         """Return a list of ids and names of songs to be exported.
 
         Takes the export form data and matches songs against those parameters.
+        Arguments:
+          formdata -- data from the export song form.
         """
         if formdata is None:
             formdata = kwargs
@@ -178,7 +197,11 @@ class Database:
         return idlist
 
     def export_songs(self, formdata, *args, **kwargs):
-        """Return all data about songs matching export form data. """
+        """Return all data about songs matching export form data. 
+
+        Arguments:
+          formdata -- data from the export song form.
+        """
         idlist = self.get_export_song_ids(formdata)
         export = []
         for song_id in idlist.keys():
@@ -201,6 +224,9 @@ class Database:
 
         This is for a song received from http POST.  If an "id" is present,
         it will try to update a song with that id.
+        
+        Arguments:
+          formdata -- data from a song form.
         """
         new_record = formdata.get("id") == 'None'
         pages = [p for p in formdata.getlist("page") if p]
@@ -210,7 +236,11 @@ class Database:
 
     def save_imported_song(self, formdata):
         """Prepare song data from an import file
-        and save it to the database."""
+        and save it to the database.
+
+        Arguments:
+          formdata -- data from the import songs form.
+        """
         new_record = True
         pages = []
         for page in sorted(formdata.get("pages"),
@@ -220,7 +250,13 @@ class Database:
         return self.save_song(formdata, new_record)
 
     def save_song(self, formdata, new_record=True):
-        """Actually write prepped song data to the database."""
+        """Actually write prepped song data to the database.
+ 
+        Arguments:
+          formdata -- a dict containing the song data.
+          new_record -- indicates if this is a new song to be added, 
+                        or an exising one being edited.
+        """
         qdata = {
             "name": formdata.get("name"),
             "authors": formdata.get("authors"),
@@ -228,18 +264,25 @@ class Database:
             "keywords": formdata.get("keywords"),
             }
         if new_record:
-            query = """INSERT INTO songs (name, authors, category, keywords)
-            VALUES (:name, :authors, :category, :keywords)"""
+            query = (
+                """INSERT INTO songs (name, authors, category, keywords)
+                VALUES (:name, :authors, :category, :keywords)"""
+            )
         else:
-            query = ("""UPDATE songs """
-                     """SET name=:name, authors=:authors,"""
-                     """ category=:category, keywords=:keywords """
-                     """WHERE id=:id """)
+            query = (
+                """UPDATE songs
+                SET name=:name, authors=:authors,
+                category=:category, keywords=:keywords
+                WHERE id=:id """
+            )
             qdata["id"] = formdata.get("id")
         debug(query, qdata)
         self.query(query, qdata, False)
-        song_id = ((new_record and self.cu().lastrowid)
-                   or int(formdata.get("id")))
+        song_id = (
+            (new_record 
+            and self.cu().lastrowid)
+            or int(formdata.get("id"))
+        )
 
         pages = formdata.get("pages")
         # Process pagebreaks in the lyric pages
@@ -270,7 +313,11 @@ class Database:
         return song_id.__str__()
 
     def delete_song(self, formdata):
-        """Delete a song from the database, as defined by <id>."""
+        """Delete a song from the database, as defined by <id>.
+
+        Arguments:
+          formdata -- data from the delete song form.  Should contain an "id"
+        """
         song_id = int(formdata.get("id"))
         query = "DELETE FROM pages WHERE song_id=?"
         self.query(query, (song_id,), False)
@@ -280,11 +327,16 @@ class Database:
         return ""
 
     def save_settings(self, formdata):
-        """Write POSTed settings data to the database."""
+        """Write POSTed settings data to the database.
+
+        Arguments:
+          formdata -- data from the settings form.
+        """
         query = (
             """INSERT OR REPLACE INTO
             settings(setting_name, setting_value)
-            VALUES(?, ?)""")
+            VALUES(?, ?)"""
+        )
         for key, value in formdata.items():
             self.query(query, (key, value), False)
         return ""
