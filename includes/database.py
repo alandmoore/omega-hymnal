@@ -312,7 +312,7 @@ class Database:
             WHERE song_id=:song_id and page_number > :num_pages""",
             {"song_id": song_id, "num_pages": num_pages}, False)
 
-        return str(songid)
+        return str(song_id)
 
     def delete_song(self, formdata):
         """Delete a song from the database, as defined by <id>.
