@@ -72,13 +72,13 @@ $(document).ready(function(){
     
     //apply custom colors
 
-    if (bg_color){
+    if (typeof bg_color != 'undefined' && bg_color){
 	$(document).find("BODY").css({"background-color" : bg_color});
     }
-    if (fg_color){
+    if (typeof fg_color != 'undefined' && fg_color){
 	$(document).find("#content").css({"color": fg_color});
     }
-    if (ch_color){
+    if (typeof ch_color != 'undefined' && ch_color){
 	$(document).find(".chord").css({"color": ch_color});
     }
 
