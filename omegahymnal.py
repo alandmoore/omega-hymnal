@@ -16,7 +16,6 @@ and your favorite standards-compliant web browser.
 
 """
 
-
 from flask import Flask, g, render_template, request, json,  abort, Response, \
     redirect, session
 from includes.database import Database
@@ -34,6 +33,7 @@ def before_request():
     g.missing_tables = g.db.get_missing_tables()
     if len(g.missing_tables) > 0:
         g.db_corrupt = True
+        g.accounts = None
     else:
         g.db_corrupt = False
         settings = g.db.get_settings()
