@@ -179,13 +179,18 @@ NAV UL LI UL LI:hover
 
 #songlist
 {
-  list-style: none;
-  overflow: auto;
-  width: 99%;
-  position: relative;
-  overflow: auto;
-  height: auto;
-  margin-top: 8em;
+   list-style: none;
+   overflow: auto;
+   width: 99%;
+   width: -moz-available;
+   width: -webkit-available;
+   position: relative;
+   overflow: auto;
+   height: auto;
+   margin-top: 8em;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 0;
 }
 
 #songlist LI
@@ -196,7 +201,7 @@ NAV UL LI UL LI:hover
   color: #111;
   text-align: center;
   vertical-align: middle;
-  margin: 4px;
+  margin: .5em;
   padding: 0px;
   letter-spacing: .1em;
   float: left;
@@ -307,14 +312,26 @@ FORM INPUT[type=text]
 
 #filter_controls
 { 
-  position: fixed;
-  top: 3em;
-  padding: .5em;
-  background-color: #333;
-  opacity: .9;
-  z-index: 50;
-  width: 100%;
+   position: fixed;
+   top: 2em;
+   left: 0;
+   right: 0;
+   padding: .5em;
+   background-color: #333;
+   opacity: .9;
+   z-index: 50;
+   width: -moz-fit-content;
+   width: -webkit-fit-content;
+   margin-left: auto;
+   margin-right: auto;
  }
+
+#filter_controls LI
+{
+   display: block;
+   float: left;
+   margin: 0 2em;
+}
 
 DIV.songpage
 {
@@ -366,6 +383,7 @@ SPAN.chord
    overflow: auto;
    height: 13em;
 }
+
 
 /**********/
 /* FOOTER */

@@ -117,7 +117,15 @@ $(document).ready(function(){
     //some jquery-ui magic
     $("#with_music_checkbox").button();
     $("#randomize_list").button();
-    $("#category_select").addClass("ui-widget");
+    //$("#category_select").addClass("ui-widget");
+    $("#category_select").selectmenu({
+	position: {my: "bottom center", at: "top center"},
+	width: "16em",
+	change: function(){
+	    $("#category_select").trigger("change");
+	}
+    });
+    $("#search").button().css({"text-align": "left"});
 
     //make the main page LI's clickable
     $("#songlist > LI").click(function(){
