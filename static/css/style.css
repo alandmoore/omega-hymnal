@@ -112,27 +112,27 @@ NAV A
 NAV UL LI UL 
 { 
    display: none;
-  margin: 0px;
-  padding: 0px;
+   margin: 0px;
+   padding: 0px;
    background-color: #333;
    border-radius: .5em;
-   opacity: .8;
+   opacity: .85;
+   overflow: auto;
  }
 
 NAV UL LI:hover UL {
    display: block;
    position: absolute;
    right: 0;
-   width: 10em;
+   width: 8em;
 }
 
 NAV UL LI UL LI
 { 
-  margin: 0;
-  padding: 0px 10px 0px 10px;
+   margin: 2px;
+   padding: 0px 10px 0px 10px;
    float: none;
-   width: 100%;
-   border-radius: .5em;
+   width: 8em;
  }
 
 NAV UL LI UL LI:hover
