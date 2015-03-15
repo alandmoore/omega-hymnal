@@ -23,6 +23,7 @@ from includes.util import debug
 import zlib
 
 app = Flask(__name__)
+app.config.from_pyfile("omegahymnal.conf", silent=True)
 
 
 @app.before_request
@@ -194,7 +195,6 @@ def json_get(callback):
 
 if __name__ == "__main__":
     app.debug = True
-    app.config.from_pyfile("omegahymnal.conf", silent=True)
     app.run(
         host=app.config.get("HOST", 'localhost'),
         port=app.config.get("PORT", 5000)
