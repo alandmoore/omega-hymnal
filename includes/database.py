@@ -25,6 +25,7 @@ class Database:
         self.cx_obj = None
         self.cu_obj = None
 
+    @property
     def cx(self):
         """Return a connection object to the database.
 
@@ -36,13 +37,14 @@ class Database:
             self.cx_obj.row_factory = sqlite3.Row
         return self.cx_obj
 
+    @property
     def cu(self):
         """Return a cursor object for the current connection.
 
         Use this method in place of a cursor object to ensure a valid cursor.
         """
         if not self.cu_obj:
-            self.cu_obj = self.cx().cursor()
+            self.cu_obj = self.cx.cursor()
         return self.cu_obj
 
     def query(self, query, data=None, return_results=True):
@@ -55,20 +57,20 @@ class Database:
                             Implies a "SELECT" statement, basically.
         """
         if data is None:
-            self.cu().execute(query)
+            self.cu.execute(query)
         else:
-            self.cu().execute(query, data)
+            self.cu.execute(query, data)
         if return_results:
-            results = self.cu().fetchall()
+            results = self.cu.fetchall()
             return [dict(x) for x in results]
         else:
-            self.cx().commit()
+            self.cx.commit()
             return None
 
     def initialize(self):
         """Create a fresh, empty database."""
         with open("sql/schema.sql", 'r') as sqlfile:
-            self.cu().executescript(sqlfile.read())
+            self.cu.executescript(sqlfile.read())
 
     def do_initialize_db(self, formdata, *args, **kwargs):
         """Check confirmation before initializing the database.
@@ -88,12 +90,14 @@ class Database:
 
         Return a list of missing tables, if any.
         """
-        query = """SELECT name FROM sqlite_master WHERE type='table'"""
+        query = "SELECT name FROM sqlite_master WHERE type='table'"
         are_tables = [x.get("name") for x in self.query(query)]
         debug("Tables that exist: " + str(are_tables))
         should_be_tables = ["settings", "songs", "pages"]
-        missing = [table for table in should_be_tables
-                   if table not in are_tables]
+        missing = [
+            table for table in should_be_tables
+            if table not in are_tables
+        ]
         return missing
 
     ###########
@@ -108,8 +112,11 @@ class Database:
         """
         songs = self.query("SELECT * FROM song_list_v ORDER BY name")
         for i, song in enumerate(songs):
-            songs[i]["first_page"] = re.sub("\{.*?\}", "",
-                                            song["first_page"] or '')
+            songs[i]["first_page"] = re.sub(
+                "\{.*?\}",
+                "",
+                song["first_page"] or ''
+            )
         return songs
 
     def get_categories(self, *args, **kwargs):
@@ -120,9 +127,9 @@ class Database:
         """
         term = kwargs.get("term", '') + '%'
         categories = self.query(
-            """SELECT DISTINCT category
-            FROM songs WHERE category like ?
-            ORDER BY category""", 
+            "SELECT DISTINCT category "
+            "FROM songs WHERE category like ? "
+            "ORDER BY category",
             (term,)
         )
         categories = [x["category"] for x in categories]
@@ -137,9 +144,11 @@ class Database:
         debug(kwargs)
         term = kwargs.get("term", '') + "%"
         names = self.query(
-            """SELECT DISTINCT name """
-            """FROM songs WHERE name like ? """
-            """ORDER BY name""", (term,))
+            "SELECT DISTINCT name "
+            "FROM songs WHERE name like ? "
+            "ORDER BY name",
+            (term,)
+        )
         names = [x["name"] for x in names]
         return names
 
@@ -151,14 +160,16 @@ class Database:
         *args and **kwargs aren't used, they just consume extra args
         from the controller.
         """
-        song = self.query("""SELECT * FROM songs WHERE id=?""", (id,))
+        song = self.query("SELECT * FROM songs WHERE id=?", (id,))
         if not song:
             return {}
         song = song[0]
         song["pages"] = self.query(
-            """SELECT page_number, lyrics """
-            """FROM pages WHERE song_id=? """
-            """ORDER BY page_number ASC""", (id,))
+            "SELECT page_number, lyrics "
+            "FROM pages WHERE song_id=? "
+            "ORDER BY page_number ASC",
+            (id,)
+        )
         if not kwargs.get("no_prep_lyrics"):
             for i, page in enumerate(song.get("pages")):
                 lyrics = page.get("lyrics")
@@ -191,8 +202,6 @@ class Database:
         else:  # Default to "all"
             qdata = {}
             query = "SELECT id,name FROM songs"
-        print(query)
-        print(qdata)
         idlist = self.query(query, qdata)
         idlist = dict([(x["id"], x["name"]) for x in idlist])
 
@@ -213,8 +222,9 @@ class Database:
     def get_settings(self):
         """Return all settings stored in the database."""
         settings = self.query("SELECT * FROM settings ORDER BY setting_name")
-        settings = dict([(x["setting_name"], x["setting_value"])
-                         for x in settings])
+        settings = dict(
+            (x["setting_name"], x["setting_value"]) for x in settings
+        )
         return settings
 
     ###########
@@ -232,7 +242,7 @@ class Database:
         """
         new_record = formdata.get("id") == 'None'
         pages = [p for p in formdata.getlist("page") if p]
-        formdata = dict([(key,  value) for key, value in formdata.items()])
+        formdata = dict((key,  value) for key, value in formdata.items())
         formdata["pages"] = pages
         return self.save_song(formdata, new_record)
 
@@ -245,18 +255,20 @@ class Database:
         """
         new_record = True
         pages = []
-        for page in sorted(formdata.get("pages"),
-                           key=lambda k: k["page_number"]):
+        for page in sorted(
+                formdata.get("pages"),
+                key=lambda k: k["page_number"]
+        ):
             pages.append(page.get("lyrics"))
         formdata["pages"] = pages
         return self.save_song(formdata, new_record)
 
     def save_song(self, formdata, new_record=True):
         """Actually write prepped song data to the database.
- 
+
         Arguments:
           formdata -- a dict containing the song data.
-          new_record -- indicates if this is a new song to be added, 
+          new_record -- indicates if this is a new song to be added,
                         or an exising one being edited.
         """
         qdata = {
@@ -267,30 +279,31 @@ class Database:
             }
         if new_record:
             query = (
-                """INSERT INTO songs (name, authors, category, keywords)
-                VALUES (:name, :authors, :category, :keywords)"""
+                "INSERT INTO songs (name, authors, category, keywords) "
+                "VALUES (:name, :authors, :category, :keywords)"
             )
         else:
             query = (
-                """UPDATE songs
-                SET name=:name, authors=:authors,
-                category=:category, keywords=:keywords
-                WHERE id=:id """
+                "UPDATE songs "
+                "SET name=:name, authors=:authors, "
+                "category=:category, keywords=:keywords "
+                "WHERE id=:id "
             )
             qdata["id"] = formdata.get("id")
         debug(query, qdata)
         self.query(query, qdata, False)
         song_id = (
-            (new_record 
-            and self.cu().lastrowid)
-            or int(formdata.get("id"))
+            (new_record and self.cu.lastrowid) or
+            int(formdata.get("id"))
         )
 
         pages = formdata.get("pages")
         # Process pagebreaks in the lyric pages
-        pages = [page.strip() for page in
-                 chain(*[p.split("[pagebreak]") for p in pages])
-                 if page.strip()]
+        pages = [
+            page.strip()
+            for page in chain(*[p.split("[pagebreak]") for p in pages])
+            if page.strip()
+        ]
         for pagenum, page in enumerate(pages):
             qdata = {
                 "song_id": song_id,
@@ -298,9 +311,9 @@ class Database:
                 "lyrics": page
                 }
             query = (
-                """INSERT OR REPLACE INTO pages
-                (song_id, page_number, lyrics)
-                VALUES (:song_id, :page_number, :lyrics)"""
+                "INSERT OR REPLACE INTO pages "
+                "(song_id, page_number, lyrics) "
+                "VALUES (:song_id, :page_number, :lyrics)"
             )
             debug(query)
             debug(qdata)
@@ -308,9 +321,11 @@ class Database:
         # remove orphan pages from the song
         num_pages = len(pages)
         self.query(
-            """DELETE FROM pages
-            WHERE song_id=:song_id and page_number > :num_pages""",
-            {"song_id": song_id, "num_pages": num_pages}, False)
+            "DELETE FROM pages "
+            "WHERE song_id=:song_id and page_number > :num_pages",
+            {"song_id": song_id, "num_pages": num_pages},
+            False
+        )
 
         return str(song_id)
 
@@ -335,9 +350,9 @@ class Database:
           formdata -- data from the settings form.
         """
         query = (
-            """INSERT OR REPLACE INTO
-            settings(setting_name, setting_value)
-            VALUES(?, ?)"""
+            "INSERT OR REPLACE INTO "
+            "settings(setting_name, setting_value) "
+            "VALUES(?, ?)"
         )
         for key, value in formdata.items():
             self.query(query, (key, value), False)
