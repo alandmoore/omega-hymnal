@@ -1,5 +1,5 @@
 BODY
-{ 
+{
   background-color: #333;
   color: white;
   font-size: 12pt;
@@ -8,21 +8,21 @@ BODY
   margin: 0px;
 }
 
-A 
-{ 
+A
+{
   color: #EEF;
   text-decoration: none;
-  
+
  }
 
 A:hover
-{ 
+{
   font-style: italic;
  }
 
 input[type=text],
 input[type=password]
-{ 
+{
   min-width: 30em;
  }
 
@@ -35,7 +35,7 @@ input[type=password]
 }
 
 DIV.songpage
-{ 
+{
   font-size: 5em;
   text-shadow: 0px 2px 2px #888;
   padding: .5em 30px 20px 30px;
@@ -45,8 +45,8 @@ DIV.songpage
   margin-top: 1em;
   }
 
-NAV 
-{ 
+NAV
+{
   background-color: slategray;
   border-bottom: solid 2px silver;
   box-shadow: inset 0px -10px 10px #AAC, 2px 2px 4px black;
@@ -60,11 +60,11 @@ NAV
   width: 100%;
   color: #EEE;
   text-shadow: 0px 0px 5px black;
-  
+
  }
 
 NAV UL
-{ 
+{
   list-style: none;
   margin-top: 0px;
   padding: 0;
@@ -97,7 +97,7 @@ NAV UL
 }
 
 NAV UL LI
-{ 
+{
   float: left;
    min-width: 5em;
    width: 18%;
@@ -105,12 +105,12 @@ NAV UL LI
  }
 
 NAV A
-{ 
+{
   text-shadow: 0px 0px 5px black;
  }
 
-NAV UL LI UL 
-{ 
+NAV UL LI UL
+{
    display: none;
    margin: 0px;
    padding: 0px;
@@ -128,7 +128,7 @@ NAV UL LI:hover UL {
 }
 
 NAV UL LI UL LI
-{ 
+{
    margin: 2px;
    padding: 0px 10px 0px 10px;
    float: none;
@@ -151,7 +151,7 @@ NAV UL LI UL LI:hover
 }
 
 #content
-{ 
+{
    padding: 0;
    text-align: center;
    vertical-align: middle;
@@ -191,10 +191,14 @@ NAV UL LI UL LI:hover
    margin-left: auto;
    margin-right: auto;
    padding: 0;
+   display: flex;
+   flex-wrap: wrap;
+   align-items: left;
+   justify-content: center;
 }
 
 #songlist LI
-{ 
+{
   font-size: 1.2em;
   border-radius: 5px;
   background-color: silver;
@@ -204,14 +208,13 @@ NAV UL LI UL LI:hover
   margin: .5em;
   padding: 0px;
   letter-spacing: .1em;
-  float: left;
   width: 20em;
   height: 5em;
   overflow: hidden;
 }
 
 #songlist LI .song_title
-{ 
+{
   display:block;
   color: #111;
   text-shadow: 0px 0px 3px gray;
@@ -219,7 +222,7 @@ NAV UL LI UL LI:hover
   padding: 4px;
 }
 #songlist LI .keywords
-{ 
+{
   font-size: .6em;
   color: #555;
   font-style: italic;
@@ -227,7 +230,7 @@ NAV UL LI UL LI:hover
  }
 
 #songlist LI .chord_icon
-{ 
+{
   background-color: lightblue;
   border-radius: 50%;
   margin: .5em;
@@ -248,14 +251,14 @@ NAV UL LI UL LI:hover
 }
 
 #songlist LI:hover
-{ 
+{
   background-color: slategray;
   cursor: pointer;
   font-style: italic;
   }
 
 FORM
-{ 
+{
   border-radius: 5px;
   color: #111;
   background-color: silver;
@@ -264,12 +267,12 @@ FORM
  }
 
 FORM UL
-{ 
+{
   list-style: none;
  }
 
 FORM UL LI
-{ 
+{
   text-align: left;
   overflow: auto;
   width: 90%;
@@ -285,14 +288,14 @@ FORM UL LI.selected
 }
 
 FORM UL LI LABEL
-{ 
+{
   display: block;
   float: left;
   width: 10em;
  }
 
 FORM TEXTAREA.page_textarea
-{ 
+{
   display: block;
   width: 80%;
   clear: both;
@@ -305,13 +308,13 @@ FORM INPUT[type=text]
    width: 24em;
 }
 
-#delete{ 
-         color: red;
-         border: solid 2px red;
+#delete{
+	 color: red;
+	 border: solid 2px red;
  }
 
 #filter_controls
-{ 
+{
    position: fixed;
    top: 2em;
    left: 0;
@@ -345,18 +348,18 @@ DIV.songpage
 }
 
 SPAN.songline
-{ 
+{
   position: relative;
  }
 
 SPAN.chord
-{ 
+{
   color: #DDF;
   position: absolute;
   z-index: 99;
   font-size: .5em;
   overflow: visible;
-  
+
  }
 
 
