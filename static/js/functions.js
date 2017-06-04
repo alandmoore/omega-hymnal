@@ -1,6 +1,15 @@
 //Javascript functions for the omega hymnal
 //This file is loaded on every page
 
+
+//TODO: cleanup this spaghetti mess...
+
+///////////////////////
+// jQuery extensions //
+///////////////////////
+
+/* global $, jQuery, Song */
+
 //copypasta code
 (function($){
 
@@ -36,10 +45,18 @@ $.extend($.expr[':'], {
   }
 });
 
+//////////////
+// Settings //
+//////////////
 var default_dialog_options = {
     width : "90%",
     modal : true
-}
+};
+
+
+///////////////
+// Functions //
+///////////////
 
 function show_popup_form(data, onfinish){
     default_dialog_options.title = $(data).attr("title");
@@ -49,27 +66,91 @@ function show_popup_form(data, onfinish){
     }
 }
 
-function apply_filters(){
-    $(".songlink").hide();
-    var category = $("#category_select").val();
-    var show_with_music_only = $("#with_music_checkbox").is(":checked");
-    if (category === ''){
-	$(".songlink").show();
-    }else{
-	$(".songlink[data-category=\"" + category + "\"]").show();
+//////////////
+// SongList //
+//////////////
+
+function SongList(songlist_id){
+    var $sl = $(songlist_id);
+    if ($sl.length == 0){
+	return null;
     }
-    if (show_with_music_only){
-	$(".songlink:visible:not(:contains(♫))").hide();
-    }
+    $sl.songlinks = $sl.find('.songlink');
+    $sl.category_select = $("#category_select");
+    $sl.with_music_checkbox = $("#with_music_checkbox");
+    $sl.search_inp = $("#search");
+    $sl.randomize_btn = $("#randomize_list");
+
+    //Song filters
+    $sl.apply_filters = function(){
+	$sl.songlinks.hide();
+	var category = $sl.category_select.val();
+	var show_with_music_only = $sl.with_music_checkbox.is(":checked");
+	if (category === ''){
+	    $sl.songlinks.show();
+	}else{
+	    $sl.songlinks.filter("[data-category=\"" + category + "\"]").show();
+	}
+	if (show_with_music_only){
+	    $sl.songlinks.filter(":visible:not(:contains(♫))").hide();
+	}
+    };
+    $sl.category_select.on("change", $sl.apply_filters);
+    $sl.with_music_checkbox.on("change", $sl.apply_filters);
+    $sl.apply_filters();
+
+    //Song searching
+    $sl.search = function(){
+	var term = $sl.search_inp.val();
+	if (term.length > 0){
+	    $sl.songlinks.hide();
+	    $sl.songlinks.filter(":containsi("+term+")").show();
+	}else{
+	    $sl.songlinks.show();
+	}
+	$sl.category_select.attr("value", "");
+    };
+    $sl.search_inp.on('keyup', $sl.search);
+    $sl.search_inp.focus();
+
+
+    //some jquery-ui magic
+    $sl.with_music_checkbox.button();
+    $sl.randomize_btn.button();
+    $sl.category_select.selectmenu({
+	position: {my: "bottom center", at: "top center"},
+	width: "16em",
+	change: function(){
+	    $sl.category_select.trigger("change");
+	}
+    });
+    $sl.search_inp.button().css({"text-align": "left"});
+
+    //make the main page LI's clickable
+    $sl.song_container = Song("#song_container");
+
+    $sl.songlinks.click(function(){
+	var href = $(this).attr("data-href");
+	document.song_id = href.match(/\d+$/);
+	$("#songlist_container").hide();
+	$sl.song_container.show_song(href);
+    });
+
+
+   //randomize button
+    $sl.randomize_btn.click(function(){
+	var orig_label = $(this).html();
+	$(this).html("Hang on a sec").attr("disabled", "disabled");
+	$sl.songlinks = $sl.songlinks.shuffle();
+	$(this).html(orig_label).removeAttr("disabled");
+    });
+
+    return $sl;
 }
 
-$(document).ready(function(){
-	//even out the navigation
-    //setTimeout(function(){
-//	var navitems = $("NAV > UL > LI");
-//	navitems.css("width", Math.floor((window.innerWidth/navitems.size()) * .95));
-  //  }, 200);
 
+$(document).ready(function(){
+    //even out the navigation
     //apply custom colors
 
     if (typeof bg_color != 'undefined' && bg_color){
@@ -82,68 +163,7 @@ $(document).ready(function(){
 	$(document).find(".chord").css({"color": ch_color});
     }
 
-
-    $("#search").focus();
-    $("#search").keyup(function(){
-	var term = $(this).val();
-
-	if (term.length > 0){
-	$(".songlink").hide();
-	$(".songlink:containsi("+term+")").show();
-	}else{
-	    $(".songlink").show();
-	}
-	$("#category_select").attr("value", "");
-    });
-    //category filter
-    $("#category_select").change(function(){
-	// var category = $(this).val();
-	// console.log(category);
-	// if (category === ""){
-	//     $(".songlink").show();
-	// }else{
-	// $(".songlink").hide();
-	// $(".songlink[data-category=\"" + category + "\"]").show();
-	// }
-	apply_filters();
-    });
-    apply_filters();
-
-    //Music filter
-    $("#with_music_checkbox").change(function(){
-	apply_filters();
-    });
-
-    //some jquery-ui magic
-    $("#with_music_checkbox").button();
-    $("#randomize_list").button();
-    //$("#category_select").addClass("ui-widget");
-    $("#category_select").selectmenu({
-	position: {my: "bottom center", at: "top center"},
-	width: "16em",
-	change: function(){
-	    $("#category_select").trigger("change");
-	}
-    });
-    $("#search").button().css({"text-align": "left"});
-
-    //make the main page LI's clickable
-    $song_container = Song("#song_container");
-
-    $("#songlist > LI").click(function(){
-	var href = $(this).attr("data-href");
-	document.song_id = href.match(/\d+$/);
-	$("#songlist_container").hide();
-	$song_container.show_song(href);
-    });
-
-   //randomize button
-    $("#randomize_list").click(function(){
-	var orig_label = $(this).html();
-	$(this).html("Hang on a sec").attr("disabled", "disabled");
-	$("#content  #songlist  LI").shuffle();
-	$(this).html(orig_label).removeAttr("disabled");
-    });
+    document.songlist = SongList('#songlist');
 
     //If this is a song page, make "Home" close the window
     $("#link_home").click(function(){
@@ -228,7 +248,7 @@ $(document).ready(function(){
 		$.each(data, function(i, val){
 		    dest.append("<li>" + val + "</li>");
 		});
-	    })
+	    });
 	}else{
 	    $("#song_to_export").html("");
 	}
@@ -300,7 +320,7 @@ $(document).ready(function(){
 	    function(){
 		$("#_dialog_").dialog("close");
 	    }
-	)
+	);
 	return false;
     });
 
@@ -328,8 +348,8 @@ $(document).ready(function(){
 	$.post($(this).attr("action"), formdata, function(){
 	    window.location = location;
 	    window.location.reload();
-	})
-	return false
+	});
+	return false;
     });
 
     // LOGIN/LOGOUT
