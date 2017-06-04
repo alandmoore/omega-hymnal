@@ -1,6 +1,13 @@
 //Functions for the omega hymnal song page
 
+
+/* global $ transpose_chord */
+
+
 function fitDivToPage($div) {
+    // This function takes an element and stretches it
+    // to fit the parent element, expanding text to maximum size.
+
     var target_height =  window.innerHeight - $("NAV").outerHeight();
     var numbreaks = $div.find(" > br").size() +1;
     var target_width = window.innerWidth * .95;
@@ -51,9 +58,13 @@ function Song(container_id) {
 	$(".chord").each(function(i, el){
 	    $(el).html(transpose_chord($song.original_chords[i].innerHTML, $song.transpose));
 	});
-	setTimeout( function(){fitDivToPage($div);}, 50);
-
-    }
+	window.setTimeout(
+	    function(){
+		fitDivToPage($div);
+	    },
+	    50
+	);
+    };
 
     $song.init = function(){
 	$song.page = 1;
@@ -95,14 +106,14 @@ function Song(container_id) {
 	});
 
 	$song.show();
-    }
+    };
 
     $song.show_song = function(href){
 	$.get(href, function(html){
 	    $song.html(html);
 	    $song.init();
 	});
-    }
+    };
 
     return $song;
 }
