@@ -2,3 +2,4 @@ __pycache__
 *.pycoh.db
 /oh.db
 *.pyc
+/static/js/.tern-port

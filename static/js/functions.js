@@ -3,28 +3,28 @@
 
 //copypasta code
 (function($){
- 
+
     $.fn.shuffle = function() {
- 
-        var allElems = this.get(),
-            getRandom = function(max) {
-                return Math.floor(Math.random() * max);
-            },
-            shuffled = $.map(allElems, function(){
-                var random = getRandom(allElems.length),
-                    randEl = $(allElems[random]).clone(true)[0];
-                allElems.splice(random, 1);
-                return randEl;
-           });
- 
-        this.each(function(i){
-            $(this).replaceWith($(shuffled[i]));
-        });
- 
-        return $(shuffled);
- 
+
+	var allElems = this.get(),
+	    getRandom = function(max) {
+		return Math.floor(Math.random() * max);
+	    },
+	    shuffled = $.map(allElems, function(){
+		var random = getRandom(allElems.length),
+		    randEl = $(allElems[random]).clone(true)[0];
+		allElems.splice(random, 1);
+		return randEl;
+	   });
+
+	this.each(function(i){
+	    $(this).replaceWith($(shuffled[i]));
+	});
+
+	return $(shuffled);
+
     };
- 
+
 })(jQuery);
 
 
@@ -64,12 +64,12 @@ function apply_filters(){
 }
 
 $(document).ready(function(){
-        //even out the navigation
+	//even out the navigation
     //setTimeout(function(){
 //	var navitems = $("NAV > UL > LI");
 //	navitems.css("width", Math.floor((window.innerWidth/navitems.size()) * .95));
   //  }, 200);
-    
+
     //apply custom colors
 
     if (typeof bg_color != 'undefined' && bg_color){
@@ -82,11 +82,11 @@ $(document).ready(function(){
 	$(document).find(".chord").css({"color": ch_color});
     }
 
-    
+
     $("#search").focus();
     $("#search").keyup(function(){
 	var term = $(this).val();
-	
+
 	if (term.length > 0){
 	$(".songlink").hide();
 	$(".songlink:containsi("+term+")").show();
@@ -128,13 +128,15 @@ $(document).ready(function(){
     $("#search").button().css({"text-align": "left"});
 
     //make the main page LI's clickable
+    $song_container = Song("#song_container");
+
     $("#songlist > LI").click(function(){
 	var href = $(this).attr("data-href");
-	window.open(href, '_blank');
-	window.focus();
-	return false;
+	document.song_id = href.match(/\d+$/);
+	$("#songlist_container").hide();
+	$song_container.show_song(href);
     });
- 
+
    //randomize button
     $("#randomize_list").click(function(){
 	var orig_label = $(this).html();
@@ -144,11 +146,10 @@ $(document).ready(function(){
     });
 
     //If this is a song page, make "Home" close the window
-    if ($("#songtitle").length > 0){
-	$("#link_home").click(function(){
-	    window.close();
-	});
-    }
+    $("#link_home").click(function(){
+	$("#song_container").hide();
+	$("#songlist_container").show();
+    });
     $("_dialog_").hide();
 
     //SONG EDITING
@@ -177,20 +178,17 @@ $(document).ready(function(){
 	    $("#edit_form .page_textarea:last").remove();
 	}
     });
-    
+
     //Post a song edit
-    $(document).on("submit", "#edit_form", function(){
+    $(document).on("submit", "#edit_form", function(e){
+	e.preventDefault();
 	var formdata = $(this).serialize();
 	var new_song = $(this).find("INPUT[name=id]").val() === 'None';
 	$.post("/post/song", formdata, function(song_id){
-	    if (new_song){
-		window.open("/song/"+song_id);
-		$("#_dialog_").dialog("close");
-	    }else{
-		window.location = "/song/"+song_id;
-	    }
+	    $("#songlist_container").hide();
+	    $song_container.show_song("/song/"+song_id);
+	    $("#_dialog_").dialog("close");
 	});
-	return false;
     });
     //EXPORT
     //Show the export dialog
@@ -218,8 +216,8 @@ $(document).ready(function(){
 	});
     });
     //When the export form is changed, display the songs to be exported
-    $(document).on("change keyup autocompleteselect", 
-		   "#export_form INPUT[type=text], #export_form SELECT", 
+    $(document).on("change keyup autocompleteselect",
+		   "#export_form INPUT[type=text], #export_form SELECT",
 		   function(e, ui){
 		       var value = (ui && ui.item.value)|| $(this).val();
 		       if (value !== ''){
@@ -305,7 +303,7 @@ $(document).ready(function(){
 	)
 	return false;
     });
-    
+
     //INITIALIZE
     //Call the initialize form
     $(document).on("click", "#link_initialize", function(event){
@@ -333,7 +331,7 @@ $(document).ready(function(){
 	})
 	return false
     });
-    
+
     // LOGIN/LOGOUT
     $(document).on("click", "#link_login", function(event){
 	$.get("/login", function(data){

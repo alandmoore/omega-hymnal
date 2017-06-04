@@ -16,7 +16,7 @@ and your favorite standards-compliant web browser.
 
 """
 
-from flask import Flask, g, render_template, request, json,  abort, Response, \
+from flask import Flask, g, render_template, request, json, abort, Response,\
     redirect, session
 from includes.database import Database
 from includes.util import debug
@@ -45,19 +45,23 @@ def before_request():
             g.secured = False
         else:
             g.secured = True
-        g.std_args = {"settings": settings,
-                      "categories": categories,
-                      "session": session,
-                      "secured": g.secured}
+        g.std_args = {
+            "settings": settings,
+            "categories": categories,
+            "session": session,
+            "secured": g.secured
+        }
 
 
 @app.route("/")
 def index():
     """Return the landing page."""
     if g.db_corrupt:
-        return render_template("corrupt.jinja2",
-                               missing=g.missing_tables,
-                               filename=app.config.get("DATABASE_FILE"))
+        return render_template(
+            "corrupt.jinja2",
+            missing=g.missing_tables,
+            filename=app.config.get("DATABASE_FILE")
+        )
     else:
         songs = g.db.get_songlist()
         return render_template("main.jinja2", songs=songs, **g.std_args)
@@ -92,8 +96,9 @@ def export():
     return Response(
         filedata,
         mimetype='application/octet-stream',
-        headers={"Content-Disposition":
-                 "attachment;filename=export.omegahymnal"})
+        headers={
+            "Content-Disposition": "attachment;filename=export.omegahymnal"
+        })
 
 
 @app.route("/import", methods=["GET", "POST"])
@@ -126,8 +131,11 @@ def settings():
 @app.route("/initialize")
 def initialize_database():
     """Return the initialization page."""
-    return render_template("initialize_form.jinja2",
-                           filename=app.config['DATABASE_FILE'], **g.std_args)
+    return render_template(
+        "initialize_form.jinja2",
+        filename=app.config['DATABASE_FILE'],
+        **g.std_args
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])

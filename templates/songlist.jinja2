@@ -1,0 +1,51 @@
+<div id="songlist_container">
+<ul id="filter_controls">
+  <li>
+    <span class='ui-widget' >
+      {#<label for='search'>Search: </label>#}
+      <input type='search' placeholder='Search'  id='search' />
+    </span>
+  </li>
+  <li><select id='category_select'>
+    <option value=''>(All)</option>
+    {% for category in categories: %}
+      <option value="{{category}}">{{category}}</option>
+    {% endfor %}
+  </select>
+  </li>
+  <li><button id='randomize_list'>Randomize</button></li>
+  <li>
+    <label for='with_music_checkbox'>Only songs with chords</label>
+    <input id='with_music_checkbox' type='checkbox'/>
+  </li>
+</ul>
+
+<ul id="songlist">
+
+  {% for song in songs: %}
+    <li
+	class='songlink'
+	title = "{{song.get("first_page")}}"
+	data-song_id={{song.get("id")}}
+	data-category="{{song.get("category")}}"
+	data-href="{{url_for("song", id=song.get("id"))}}"
+    >
+      {% if song.get("has_chords") == 1: %}
+	<span class=chord_icon>&#x266B;</span>
+      {% endif %}
+      <span class="song_title">{{song.get("name")}}</span>
+      {% if settings.get("search_author") == '1': %}
+	<span class="author">{{song.get("authors")}}</span>
+      {% endif %}
+      {% if settings.get("search_category")=='1' and song.get("category"): %}
+	<span class="category">({{song.get("category")}})</span>
+      {% endif %}
+
+
+      <span class="keywords">{{song.get("keywords")}}</span>
+
+    </li>
+  {% endfor %}
+
+</ul>
+</div>

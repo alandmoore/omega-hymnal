@@ -1,16 +1,11 @@
-{% extends "base.jinja2" %}
 {% block additional_headers %}
-<script src='{{url_for("static", filename="js/songpage.js")}}'></script>
-<script>document.song_id = {{song.get("id")}};</script>
 {% endblock %}
 {% block body %}
 {% include "song_navigation.jinja2" %}
-<div id="content">
-
 {% if song.get("pages"): %}
 {% for page in song.get("pages"): %}
-<div 
-   id='page{{page.get("page_number")}}' 
+<div
+   id='page{{page.get("page_number")}}'
    class = 'songpage'
    data-songtitle = "{{song.get("name")}}"
 >
@@ -21,6 +16,5 @@
 {% else: %}
 <h1>This song doesn't exist or has no pages.</h1>
 {% endif %}
-</div>
 
 {% endblock %}
