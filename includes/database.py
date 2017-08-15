@@ -74,10 +74,10 @@ class Database:
 
     def do_initialize_db(self, formdata, *args, **kwargs):
         """Check confirmation before initializing the database.
-        
+
         Arguments:
           formdata -- a dict or hashable containing submitted form data.
-        *args and **kwargs are thrown away, they're there to consume 
+        *args and **kwargs are thrown away, they're there to consume
         any extra args sent by the controller.
         """
         confirm = formdata.get("init_db")
@@ -132,7 +132,10 @@ class Database:
             "ORDER BY category",
             (term,)
         )
-        categories = [x["category"] for x in categories]
+        categories = list(set([
+            y.strip() for x in categories
+            for y in x["category"].split(',')
+        ]))
         return categories
 
     def get_names(self, *args, **kwargs):
@@ -208,7 +211,7 @@ class Database:
         return idlist
 
     def export_songs(self, formdata, *args, **kwargs):
-        """Return all data about songs matching export form data. 
+        """Return all data about songs matching export form data.
 
         Arguments:
           formdata -- data from the export song form.
@@ -236,7 +239,7 @@ class Database:
 
         This is for a song received from http POST.  If an "id" is present,
         it will try to update a song with that id.
-        
+
         Arguments:
           formdata -- data from a song form.
         """

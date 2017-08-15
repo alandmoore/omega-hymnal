@@ -4,8 +4,8 @@
 <ul>
 <li><label>Name: </label><input type='text' name='name' value="{{song.get("name", '')}}" required /></li>
 <li><label>Author(s):</label><input type='text'name='authors' value="{{song.get("authors", '')}}" /></li>
-<li><label>Category:</label><input type='text' name='category' value="{{song.get("category", '')}}" /></li>
-<li><label>Keywords:</label><input type='text' name='keywords' value="{{song.get("keywords", '')}}" /></li>
+<li><label>Category(s):</label><input type='text' name='category' value="{{song.get("category", '')}}" placeholder="Category 1, Category 2, etc" /></li>
+<li><label>Keywords:</label><input type='text' name='keywords' value="{{song.get("keywords", '')}}" placeholder="Keyword 1, Keyword 2, etc"/></li>
 <li><h2>Pages</h2>
   <ul>
     {% for page in song.get("pages", []) %}

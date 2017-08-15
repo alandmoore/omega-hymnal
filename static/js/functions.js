@@ -89,7 +89,10 @@ function SongList(songlist_id){
 	if (category === ''){
 	    $sl.songlinks.show();
 	}else{
-	    $sl.songlinks.filter("[data-category=\"" + category + "\"]").show();
+	    $sl.songlinks.filter(function(i, el){
+		categories = $(el).data("category").split(',').map(String.trim);
+		return $.inArray(category, categories) !== -1;
+	    }).show();
 	}
 	if (show_with_music_only){
 	    $sl.songlinks.filter(":visible:not(:contains(♫))").hide();
@@ -206,7 +209,7 @@ $(document).ready(function(){
 	var new_song = $(this).find("INPUT[name=id]").val() === 'None';
 	$.post("/post/song", formdata, function(song_id){
 	    $("#songlist_container").hide();
-	    $song_container.show_song("/song/"+song_id);
+	    document.songlist.song_container.show_song("/song/"+song_id);
 	    $("#_dialog_").dialog("close");
 	});
     });
