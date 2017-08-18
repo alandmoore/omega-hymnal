@@ -49,7 +49,7 @@ Chords can be inserted into your music and display above the words like on a gui
 
   {D}I know that {D7/F#}my re{G}deemer {A7}lives
 
-Omega Hymnal will display each chord above the word following it.  
+Omega Hymnal will display each chord above the word following it.
 The following substitutions are made when the chords are displayed:
 
 - The pound sign "#" becomes a sharp symbol
@@ -65,6 +65,9 @@ If you want transpose to work reliably, you need to follow these guidelines:
 
 - Use capitol letters A through G for the note names.  Use only flat (b) or sharp (#) as accidentals.
 - Don't put HTML tags in your chords.  I don't think this works anyway.
+
+  You can use the shortcut `Ctrl+Alt+(letter)`, where `(letter)` is A thru G, to insert a chord at the cursor while editing a song page.
+
 
 Settings
 --------
@@ -85,10 +88,10 @@ The "Settings" dialog in the "Tools" menu allows you to configure various aspect
 Security
 --------
 
-If you want to lock down editing, settings, import of songs, and database initialization from the Tools menu, you can specify the RW_ACCOUNTS variable in the omegahymnal.conf file.  
+If you want to lock down editing, settings, import of songs, and database initialization from the Tools menu, you can specify the RW_ACCOUNTS variable in the omegahymnal.conf file.
 
 RW_ACCOUNTS is a dict, where each item is in the form::
-    
+
     "username" : "password"
 
 No, this isn't high security, but it will keep the kids from accidentally wiping out your song database.
@@ -131,7 +134,7 @@ It would be really nice for users if Omega Hymnal came with a useful selection o
 Songs must meet these requirements:
 
 - They must be *Public Domain* or otherwise licensed in a way that's compatible with the project's GPL3 license.  Songs from before 1930 are usually safe.  The hot new song on Christian radio is usually not. :-)  Note that many old hymns have been "modernized" recently with added sections; these are probably under copyright and shouldn't be included.
-- Stick to well-known, mainstream songs.  There's no reason to load the database with obscure stuff nobody will know.  
+- Stick to well-known, mainstream songs.  There's no reason to load the database with obscure stuff nobody will know.
 - Include authors when available.  Include keywords too.  Keywords are words a person might associate with the song that aren't part of the title but you'd want to search on.  For example, "The First Noel" might have keywords "christmas angels shepherds star nativity".  Include a category only if it's obvious (e.g. Christmas, Easter, or Children).
 - I've included Christian hymns so far, but nonreligious songs or songs from other faith traditions are also fine; if any are submitted I will probably split these out into multiple files organized by faith.  I reserve the right not to include offensive or objectionable songs.
 - Until I have a way to vet non-English songs for copyright or content problems, I'm going to have to accept only English songs.  I'm open to discussion on this if you have a solution to the potential problems it poses.

@@ -45,6 +45,7 @@ $.extend($.expr[':'], {
   }
 });
 
+
 //////////////
 // Settings //
 //////////////
@@ -57,6 +58,31 @@ var default_dialog_options = {
 ///////////////
 // Functions //
 ///////////////
+
+//lifted from https://stackoverflow.com/a/19961519
+HTMLTextAreaElement.prototype.insertAtCaret = function (text, post_offset) {
+    post_offset = post_offset || 0;
+    text = text || '';
+    if (document.selection) {
+	// IE
+	this.focus();
+	var sel = document.selection.createRange();
+	sel.text = text;
+    } else if (this.selectionStart || this.selectionStart === 0) {
+	// Others
+	var startPos = this.selectionStart;
+	var endPos = this.selectionEnd;
+	this.value = this.value.substring(0, startPos) +
+	    text +
+	    this.value.substring(endPos, this.value.length);
+	this.selectionStart = startPos + text.length + post_offset;
+	this.selectionEnd = startPos + text.length + post_offset;
+  } else {
+    this.value += text;
+  }
+};
+
+
 
 function show_popup_form(data, onfinish){
     default_dialog_options.title = $(data).attr("title");
@@ -202,6 +228,14 @@ $(document).ready(function(){
 	}
     });
 
+    //insert a chord when ctrl+alt+[A-G] is pressed
+    $(document).on("keydown", "#edit_form .page_textarea", function(e){
+	if (e.altKey && e.ctrlKey && ($.inArray(e.key, ['a', 'b', 'c', 'd', 'e', 'f', 'g']) !== -1)){
+	    var chordstring = "{" + e.key.toUpperCase() + "}";
+	    e.target.insertAtCaret(chordstring, -1);
+	}
+    });
+
     //Post a song edit
     $(document).on("submit", "#edit_form", function(e){
 	e.preventDefault();
@@ -209,6 +243,7 @@ $(document).ready(function(){
 	var new_song = $(this).find("INPUT[name=id]").val() === 'None';
 	$.post("/post/song", formdata, function(song_id){
 	    $("#songlist_container").hide();
+	    document.song_id = song_id;
 	    document.songlist.song_container.show_song("/song/"+song_id);
 	    $("#_dialog_").dialog("close");
 	});
