@@ -6,6 +6,7 @@ import sqlite3
 from .util import prep_lyrics, debug
 from itertools import chain
 import re
+from os import path
 
 
 class Database:
@@ -14,6 +15,12 @@ class Database:
 
     This defines all methods for accessing data in the data file.
     """
+
+    schema_file = path.join(
+        path.dirname(path.dirname(__file__)),
+        'sql',
+        'schema.sql'
+    )
 
     def __init__(self, dbfile):
         """Construct a database instance.
@@ -69,7 +76,7 @@ class Database:
 
     def initialize(self):
         """Create a fresh, empty database."""
-        with open("sql/schema.sql", 'r') as sqlfile:
+        with open(self.schema_file, 'r') as sqlfile:
             self.cu.executescript(sqlfile.read())
 
     def do_initialize_db(self, formdata, *args, **kwargs):
