@@ -116,7 +116,7 @@ function SongList(songlist_id){
 	    $sl.songlinks.show();
 	}else{
 	    $sl.songlinks.filter(function(i, el){
-		categories = $(el).data("category").split(',').map(String.trim);
+		categories = $(el).data("category").split(',').map(function(x){ return x.trim(); });
 		return $.inArray(category, categories) !== -1;
 	    }).show();
 	}
